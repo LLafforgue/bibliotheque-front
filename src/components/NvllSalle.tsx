@@ -1,0 +1,1 @@
+//**Permet de générer une nouvelle Salle */
