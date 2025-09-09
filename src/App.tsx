@@ -1,10 +1,11 @@
 import './styles/App.css';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import Accueil from './pages/accueil/Accueil';
 
 const router = createBrowserRouter([
   {
     path:'/',
-    element:<div>Accueil</div>
+    element:<Accueil/>
   },
   {
     path: '/espaces',
