@@ -1,10 +1,11 @@
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider, useRouteError } from 'react-router-dom';
 import Accueil from './pages/accueil/Accueil';
 
 const router = createBrowserRouter([
   {
     path:'/',
-    element:<Accueil/>
+    element:<Accueil/>,
+    errorElement: <PageError/>
   },
   {
     path: '/espaces',
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
     <div>Header</div>
     <Outlet/>
     </>,
+    errorElement: <PageError/>,
     children : [
       {
         path:'user',
@@ -29,10 +31,19 @@ const router = createBrowserRouter([
   }
 ]);
 
+function PageError () {
+  const error = useRouteError();
+  return (<div className='text-align'>
+  <h1 className='font-bold text-violet-500'>Une erreur est survenue</h1>
+  <p className='text-gray-800'>{error?.error?.toString() ?? error?.toString()}</p>  
+  </div>
+)
+}
+
 function App() {
 
   return (
-    <div className="App">
+    <div className="font-DMSans">
       <RouterProvider router={router}/>
     </div>
   );
