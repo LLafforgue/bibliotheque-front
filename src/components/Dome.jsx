@@ -24,13 +24,13 @@ export default function Header() {
 
         {/* Lignes verticales */}
         {[
-          { d: "M100 256 V190", delay: 0.1 },
+          { d: "M100 256 V193", delay: 0.1 },
           { d: "M256 256 V118", delay: 0.3 },
           { d: "M384 256 V80", delay: 0.5 },
           { d: "M512 256 V64", delay: 0.7 },
           { d: "M640 256 V80", delay: 0.9 },
           { d: "M768 256 V118", delay: 1.1 },
-          { d: "M924 256 V190", delay: 1.3 },
+          { d: "M924 256 V193", delay: 1.3 },
         ].map((line, i) => {
           const strokeWidth = [2, 1.5, 1.2, 1, 1.2, 1.5, 2];
           return (

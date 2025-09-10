@@ -15,7 +15,7 @@ function Accueil() {
   return (
     <div className='min-h-screen flex flex-col justify-beetwen items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500'>
         <Dome/>
-        <div className='w-full mt-10 p-5 flex flex-col justify-center items-center [perspective:1000px]'>
+        <div className='w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] mt-10 p-5 flex flex-col justify-center items-center [perspective:1000px]'>
           <motion.div
             animate={{ rotateY: mode === 'login' ? 0 : 180 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
