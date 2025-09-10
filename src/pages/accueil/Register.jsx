@@ -4,7 +4,7 @@ export default function Register ({email, password}) {
     const [user, setUser] = useState({email, password});
 
     return (
-    <div className='p-2 border-2 rounded-md border-emerald-300 dark:border-violet-500 bg-gray-50 text-gray-800 dark:bg-gray-700'>
+    <div className='w-80 p-5 border-2 rounded-md border-emerald-300 dark:border-violet-500 bg-gray-50 text-gray-800 dark:bg-gray-700'>
         <div className='flex flex-col gap-2 mt-2 justify-center items-center '>
             <div className='mt-2 text-gray-800 dark:text-gray-50 text-lg font-bold'>
             Création d'un compte
