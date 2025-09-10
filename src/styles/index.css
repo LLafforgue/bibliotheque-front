@@ -7,3 +7,11 @@
 @theme {
   --font-DMSans: "DM-Sans", sans-serif; 
 }
+
+@keyframes glow {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
+}
+.animate-glow {
+  animation: glow 8s ease-in-out infinite;
+}
