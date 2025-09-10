@@ -1,8 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Login ({setEmail, setPassword}) {
-    
+    const navigate = useNavigate();
+
     return (<div className='w-80 p-5 border-2 rounded-md border-emerald-300 dark:border-violet-500 bg-violet-50 text-gray-800 dark:bg-gray-700'>
         <div className='flex flex-col gap-2 mt-2 justify-center items-center '>
             <div className='mt-2 text-gray-800 dark:text-gray-50 text-lg font-bold'>
@@ -13,6 +15,9 @@ export default function Login ({setEmail, setPassword}) {
         onSubmit={(e)=>{
             e.preventDefault();
             console.log('submit', e);
+            setEmail('');
+            setPassword('');
+            navigate('/espaces', {replace:true});
         }}
         className='flex flex-col gap-2 mt-2 justify-center items-center '>
             <label htmlFor="email">

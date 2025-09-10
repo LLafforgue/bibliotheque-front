@@ -46,7 +46,7 @@ function Accueil() {
         </div>
 
       <div>
-        <ToggleDarkMode />
+        <ToggleDarkMode allContainer={true} />
       </div>
     </div>
   )

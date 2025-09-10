@@ -3,8 +3,9 @@ import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
 
-function ToggleDarkMode() {
+function ToggleDarkMode({allContainer}) {
   const [darkMode, setDarkMode] = useState(true);
+  const toggleVariants = {};
 
   useEffect(() => {
     if (darkMode) {
@@ -26,7 +27,7 @@ function ToggleDarkMode() {
 
         <FontAwesomeIcon icon={darkMode ? faSun : faMoon} 
         className='h-5 w-5 m-1'/>
-        {darkMode ? 'Mode clair' : 'Mode sombre'}
+        {allContainer&&(darkMode ? 'Mode clair' : 'Mode sombre')}
         
     </button>
     </div>
