@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     children : [
       {
         path:'user',
-        element: <div>User</div>
+        element: <div className='p-2'>User</div>
       },
       {
         path:'favoris',
