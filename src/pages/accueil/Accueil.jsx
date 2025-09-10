@@ -7,8 +7,8 @@ function Accueil() {
     console.log(useSearchParams());
     const [searchParams] = useSearchParams()
     const mode = searchParams.get('mode')
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
   return (
     <div>
         <header>Bienvenue dans votre bibliothèque</header>
