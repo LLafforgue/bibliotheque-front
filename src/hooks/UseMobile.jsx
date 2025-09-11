@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 
-// hook/useMobile.js
 const MOBILE_BREAKPOINT = 1000
 
 export default function useMobile() {

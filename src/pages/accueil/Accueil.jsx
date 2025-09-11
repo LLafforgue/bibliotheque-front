@@ -17,7 +17,7 @@ function Accueil() {
         <Dome/>
         <div className='w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] mt-10 p-5 flex flex-col justify-center items-center [perspective:1000px]'>
           <motion.div
-            animate={{ rotateY: mode === 'login' ? 0 : 180 }}
+            animate={{ rotateY: mode?.toLowerCase() === 'register' ? 180 : 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
             style={{ transformStyle: "preserve-3d" }}
             className='relative w-full min-h-[22rem] flex items-center justify-center'

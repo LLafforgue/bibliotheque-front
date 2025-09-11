@@ -1,6 +1,7 @@
-import { createBrowserRouter, Outlet, RouterProvider, useRouteError } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider, useRouteError, useLocation } from 'react-router-dom';
 import Accueil from './pages/accueil/Accueil';
 import Header from "./components/Header";
+import Espaces from './pages/Espaces';
 
 
 const router = createBrowserRouter([
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
       {
         path:'nouvel',
         element: <div>Nouvel Salle</div>
-      }
+      },
   ]
   }
 ]);
@@ -45,19 +46,20 @@ function PageError () {
 }
 
 function PageEspaces() {
-  return (<>
-    <Header/>
-    <div className="min-h-screen flex flex-col justify-between items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500 w-full">
-    <Outlet/>
+  const path = useLocation().pathname==='/espaces'
+  return (
+    <div className="min-h-screen w-full flex flex-col justify-between items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500 w-full">
+      <Header/>
+    {path&&<Espaces/>||<Outlet/>}
     </div>
-  </>)
+  )
 }
 
 
 function App() {
 
   return (
-    <div className="font-DMSans">
+    <div className="font-DMSans w-full">
       <RouterProvider router={router}/>
     </div>
   );

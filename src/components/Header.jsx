@@ -22,24 +22,25 @@ export default function Header() {
       <h1 className="text-2xl font-bold">Bibliothèque de User</h1>
 
       <nav className="mx-[10%] flex flex-wrap justify-center gap-6">
-        <NavLink to="/espaces/user" className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
-        <FontAwesomeIcon icon={faUser} className="h-4 w-4 dark:text-white"/>
-        {isMobile||'Paramètres'}
-        </NavLink>
-        
+               
         <NavLink to="/espaces" className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
         <FontAwesomeIcon icon={faBook} className="h-4 w-4 dark:text-white"/>
         {isMobile||'Salles'}
+        </NavLink>
+        
+        <NavLink to='/espaces/nouvel' className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
+        <FontAwesomeIcon icon={faCog} className="h-4 w-4 dark:text-white"/>
+        {isMobile||'Gérer les salles'}
+        </NavLink>
+
+        <NavLink to="/espaces/user" className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
+        <FontAwesomeIcon icon={faUser} className="h-4 w-4 dark:text-white"/>
+        {isMobile||'Paramètres'}
         </NavLink>
 
         <NavLink to='/espaces/favoris' className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
         <FontAwesomeIcon icon={faStar} className="h-4 w-4 dark:text-white"/>
         {isMobile||'Favoris'}
-        </NavLink>
-
-        <NavLink to='/espaces/nouvel' className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
-        <FontAwesomeIcon icon={faCog} className="h-4 w-4 dark:text-white"/>
-        {isMobile||'Gérer les salles'}
         </NavLink>
 
         <NavLink to='/' className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
