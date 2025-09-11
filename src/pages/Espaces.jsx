@@ -1,36 +1,23 @@
-import React,{useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import Salle from "../components/Salle";
 import fetchList from "../hooks/fetchList";
 
 export default function Espaces() {
     //a changer pour un refresh quand il y aura des datas.
+    const [refresh, setRefresh] = useState(false);
     const [sallesUser, setSallesUser] = useState([]);
-    const sallesTest = [
-        {name: 'Salle 1', number: 5},
-        {name: 'Salle 2', number: 3},
-        {name: 'Salle 3', number: 8},
-        {name: 'Salle 4', number: 2},
-        {name: 'Salle 5', number: 6},
-    ];
+    
     useEffect(() => {
        const dataFetch = async () => {
         const data = await fetchList('rubriques', 'GET');
         setSallesUser(data.data);
        };
        dataFetch();
-        // const sallesUtilisateur = undefined
-    }, []);
-
-    const setName = ({newName,id}) => {
-        // fetch to backend to change the name
-        setSallesUser([...sallesUser, sallesUser[id].name=newName]);
-        console.log(newName);
-        console.log(Salle);
-    }
-
+    }, [refresh]);
+    
     const salles = sallesUser.map((item,index) => {
                         return(
-                    <Salle key={index} name={item.name} setName={setName} number={item.number} id={index}/>
+                    <Salle key={index} name={item.name} setRefresh={setRefresh} number={item.number} id={item._id}/>
                     )}
                 );
 
