@@ -67,7 +67,6 @@ export default function Header() {
         {isMobile||'Ajouter un lien'}
     </div>
     </motion.div>
-    
         <ToggleDarkMode allContainer={false} />
     </div>
   );
