@@ -1,7 +1,7 @@
-const token = 'yp1J5j-83hZp3oVIkGYry_PmipI78TyB'
-
+const token = localStorage.getItem('token')
+console.log(token);
 export default async function fetchList(endpoint, method = 'GET', body = null) {
-  const headers = {
+  const headers = token&&{
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
     };
@@ -14,10 +14,11 @@ export default async function fetchList(endpoint, method = 'GET', body = null) {
     }
     try {
         const response = await fetch(`http://localhost:3001/${endpoint}`, config);
-        if (!response.ok) {
+        const data = await response.json();
+        if (!data.result) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return await response.json();
+        return await data ;
     } catch (error) {
         console.error('Fetch error:', error);
         throw error;

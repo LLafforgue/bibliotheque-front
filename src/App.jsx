@@ -26,6 +26,7 @@ const router = createBrowserRouter([
       {
         path:':id',
         element: <div>Salle</div>
+        // loader:
       },
       {
         path:'nouvel',

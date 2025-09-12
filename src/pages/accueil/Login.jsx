@@ -1,9 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import fetchList from '../../hooks/fetchList';
 
 
 export default function Login ({setEmail, setPassword}) {
     const navigate = useNavigate();
+
 
     return (<div className='w-80 p-5 border-2 rounded-md border-emerald-300 dark:border-violet-500 bg-violet-50 text-gray-800 dark:bg-gray-700'>
         <div className='flex flex-col gap-2 mt-2 justify-center items-center '>
@@ -14,10 +16,19 @@ export default function Login ({setEmail, setPassword}) {
         id='Connexion'
         onSubmit={(e)=>{
             e.preventDefault();
-            console.log('submit', e);
+            fetchList('users/login', 'POST', {email: e.target[0].value, password: e.target[1].value})
+            .then(data=>{
+                if(data.result){
+                    localStorage.clear();
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', data.data.username);
+                    navigate('/espaces', {replace:true});
+                } else {
+                    alert(data?.error)
+                }
+            })
             setEmail('');
             setPassword('');
-            navigate('/espaces', {replace:true});
         }}
         className='flex flex-col gap-2 mt-2 justify-center items-center '>
             <label htmlFor="email">

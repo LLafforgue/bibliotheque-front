@@ -10,6 +10,7 @@ import useMobile from "../hooks/UseMobile";
 export default function Header() {
     const isMobile = useMobile();
     const [hasAlter, setHasAlert] = useState(true);
+    const username = localStorage.getItem('username');
 
   return (
     <div className="w-full p-5 bg-emerald-300 dark:bg-violet-500 text-gray-800 dark:text-gray-50">
@@ -19,7 +20,7 @@ export default function Header() {
       transition={{ duration: 0.5 }}
       className="flex justify-round items-center"
      >
-      <h1 className="text-2xl font-bold">Bibliothèque de User</h1>
+      <h1 className="text-2xl font-bold">Bibliothèque de {username}</h1>
 
       <nav className="mx-[10%] flex flex-wrap justify-center gap-6">
                
