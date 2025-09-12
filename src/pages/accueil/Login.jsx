@@ -20,6 +20,7 @@ export default function Login ({setEmail, setPassword}) {
             .then(data=>{
                 if(data.result){
                     localStorage.clear();
+                    console.log(data.token);
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('username', data.data.username);
                     navigate('/espaces', {replace:true});
@@ -55,7 +56,12 @@ export default function Login ({setEmail, setPassword}) {
             ></input>
             </label>
         </form>
-        <h6 className='dark:text-gray-50 dark:hover:text-violet-500'>Mot de passe oublié</h6>
+            <h6 
+            className='dark:text-gray-50 cursor-pointer dark:hover:text-violet-500'
+            onClick={()=>{alert('Fonctionnalité à venir !')}}
+            >
+                Mot de passe oublié
+            </h6>
         </div>
         
         </div>)

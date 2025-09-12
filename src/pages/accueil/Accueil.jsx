@@ -36,18 +36,18 @@ function Accueil() {
             </div>
           </motion.div>
           <nav className='text-center text-sm text-gray-800 dark:text-gray-200 underline m-2 '>
-            {mode === 'login'?
-            <NavLink to ='/?mode=Register'>Je m'inscris</NavLink>
-            :
+            {mode?.toLowerCase() === 'register'?
             <NavLink to ='/?mode=login'>Je suis déjà inscrit.e</NavLink>
+            :
+            <NavLink to ='/?mode=Register'>Je m'inscris</NavLink>
             }
         
         </nav>
         </div>
-
-      <div>
-        <ToggleDarkMode allContainer={true} />
-      </div>
+        <ToggleDarkMode 
+          allContainer={true} 
+          className="fixed bottom-5 left-5"
+        />
     </div>
   )
 }

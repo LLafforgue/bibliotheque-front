@@ -1,7 +1,7 @@
 const token = localStorage.getItem('token')
 console.log(token);
 export default async function fetchList(endpoint, method = 'GET', body = null) {
-  const headers = token&&{
+  const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
     };

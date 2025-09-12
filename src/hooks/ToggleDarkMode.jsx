@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { motion } from 'framer-motion';
 
-function ToggleDarkMode({allContainer}) {
+function ToggleDarkMode({allContainer, className}) {
   const [darkMode, setDarkMode] = useState(true);
-  const toggleVariants = {};
 
   useEffect(() => {
     if (darkMode) {
@@ -16,7 +14,7 @@ function ToggleDarkMode({allContainer}) {
   }, [darkMode]);
 
   return (
-    <div className="absolute bottom-4 right-4">
+    <div className={className}>
         <button 
         className ={`
         flex items-center px-2 py-2 rounded-lg border-2 transition-colors duration-300

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import ToggleDarkMode from "../hooks/ToggleDarkMode";
 import {motion} from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,7 @@ export default function Header() {
     const isMobile = useMobile();
     const [hasAlter, setHasAlert] = useState(true);
     const username = localStorage.getItem('username');
+    const navigate = useNavigate();
 
   return (
     <div className="w-full p-5 bg-emerald-300 dark:bg-violet-500 text-gray-800 dark:text-gray-50">
@@ -44,10 +45,16 @@ export default function Header() {
         {isMobile||'Favoris'}
         </NavLink>
 
-        <NavLink to='/' className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
+        <div 
+        className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer"
+        onClick={()=>{
+            localStorage.clear();
+            navigate('/', {replace:true});
+          }}
+          >
         <FontAwesomeIcon icon={faRightFromBracket} className="h-4 w-4 dark:text-white"/>
         {isMobile||'Déconnexion'}
-        </NavLink>
+        </div>
       </nav>
 
     <div className="flex items-center gap-2">
@@ -68,7 +75,7 @@ export default function Header() {
         {isMobile||'Ajouter un lien'}
     </div>
     </motion.div>
-        <ToggleDarkMode allContainer={false} />
+        <ToggleDarkMode allContainer={false} className={'fixed bottom-5 rigth-5'} />
     </div>
   );
 }
