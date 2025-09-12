@@ -16,7 +16,7 @@ export default function Login ({setEmail, setPassword}) {
         id='Connexion'
         onSubmit={(e)=>{
             e.preventDefault();
-            fetchList('users/login', 'POST', {email: e.target[0].value, password: e.target[1].value})
+            fetchList('auth/users/login', 'POST', {email: e.target[0].value, password: e.target[1].value})
             .then(data=>{
                 if(data.result){
                     localStorage.clear();
