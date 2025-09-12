@@ -2,6 +2,7 @@ import { createBrowserRouter, Outlet, RouterProvider, useRouteError, useLocation
 import Accueil from './pages/accueil/Accueil';
 import Header from "./components/Header";
 import Espaces from './pages/Espaces';
+import NvPassword from'./pages/accueil/NvPassword';
 
 
 const router = createBrowserRouter([
@@ -9,6 +10,17 @@ const router = createBrowserRouter([
     path:'/',
     element:<Accueil/>,
     errorElement: <PageError/>
+  },
+  {
+    path:'/nvpassword',
+    element:<NvPassword/>,//formulaire post (email)
+    errorElement:<PageError/>,
+    children:[
+      {
+        path:':token',
+        element:<div>Entrer votre nouveau mot de passe</div> //formulaire put (neau mot de passe)
+      }
+    ]
   },
   {
     path: '/espaces',

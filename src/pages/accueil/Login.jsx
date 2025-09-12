@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , NavLink} from 'react-router-dom';
 import fetchList from '../../hooks/fetchList';
 
 
@@ -56,12 +56,11 @@ export default function Login ({setEmail, setPassword}) {
             ></input>
             </label>
         </form>
-            <h6 
-            className='dark:text-gray-50 cursor-pointer dark:hover:text-violet-500'
-            onClick={()=>{alert('Fonctionnalité à venir !')}}
-            >
+            <NavLink to='/nvpassword'>
+            <h6 className='dark:text-gray-50 cursor-pointer dark:hover:text-violet-500'>
                 Mot de passe oublié
             </h6>
+            </NavLink>
         </div>
         
         </div>)
