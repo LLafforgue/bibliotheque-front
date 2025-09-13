@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useParams , Outlet } from "react-router-dom";
 import ToggleDarkMode from "../../hooks/ToggleDarkMode";
 import fetchList from "../../hooks/fetchList";
 import { motion } from "framer-motion";
@@ -9,6 +9,7 @@ import { faStar, faCloud } from "@fortawesome/free-solid-svg-icons";
 export default function NvPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const {token} = useParams()
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -56,7 +57,7 @@ export default function NvPassword() {
                 left: `${Math.random() * 90}%`,
               }}
             >
-              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar}  />
             </motion.div>
           ))}
         </div>
@@ -74,7 +75,7 @@ export default function NvPassword() {
                     ease: "linear",
                     delay: i * 2, // Délai différent pour chaque nuage
                 }}
-                className="absolute text-gray-400 opacity-60 text-4xl whitespace-nowrap"
+                className="absolute text-gray-100 opacity-60 text-4xl whitespace-nowrap"
                 style={{
                     top: `${20 + i * 15}%`,
                     left: 0,
@@ -88,6 +89,7 @@ export default function NvPassword() {
       </div>
 
       {/* Carte verre poli */}
+      {!token?
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -97,7 +99,7 @@ export default function NvPassword() {
       >
         <div className="flex flex-col gap-2 mt-2 justify-center items-center">
           <div className="mt-2 text-gray-800 dark:text-gray-50 text-lg font-bold">
-            Réinitialiser le mot de passe
+            Renseignez votre adresse mail pour recevoir l'accès au changement de mot de passe
           </div>
 
           <form
@@ -128,7 +130,20 @@ export default function NvPassword() {
           </form>
         </div>
       </motion.div>
+      :
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 w-80 p-5 border-2 rounded-2xl border-emerald-300 dark:border-violet-500
+                   bg-white/30 dark:bg-gray-700/30 backdrop-blur-md shadow-lg"
+      >
+        <div className="flex flex-col gap-2 mt-2 justify-center items-center">
+        <Outlet/>
+        </div>
 
+      </motion.div>
+      }
       {/* Bouton dark mode */}
       <ToggleDarkMode allContainer={true} className="fixed bottom-5 left-5 z-20" />
     </div>

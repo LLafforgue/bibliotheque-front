@@ -3,6 +3,7 @@ import Accueil from './pages/accueil/Accueil';
 import Header from "./components/Header";
 import Espaces from './pages/Espaces';
 import NvPassword from'./pages/accueil/NvPassword';
+import ResetPassword from './pages/accueil/ResetPassword';
 
 
 const router = createBrowserRouter([
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
     children:[
       {
         path:':token',
-        element:<div>Entrer votre nouveau mot de passe</div> //formulaire put (neau mot de passe)
+        element:<ResetPassword/>
       }
     ]
   },
@@ -63,7 +64,7 @@ function PageEspaces() {
   return (
     <div className="min-h-screen w-full flex flex-col justify-between items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500 w-full">
       <Header/>
-    {path&&<Espaces/>||<Outlet/>}
+    {path?<Espaces/>:<Outlet/>}
     </div>
   )
 }
