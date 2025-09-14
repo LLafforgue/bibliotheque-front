@@ -63,7 +63,11 @@ export default function Login ({setEmail, setPassword}) {
             <input 
             type='submit'
             value='Se connecter'
-            className='cursor-pointer rounded-md px-2 py-1 border-2 border-emerald-300 dark:border-violet-500 bg-emerald-300 dark:bg-violet-500 hover:bg-emerald-400 dark:hover:bg-violet-400 text-gray-800 dark:text-gray-50 font-bold'
+            className=' px-2 py-1
+                        text-gray-800 dark:text-gray-50 font-bold
+                        rounded-md border-2 border-emerald-300 dark:border-violet-500 bg-emerald-300 dark:bg-violet-500 hover:bg-emerald-400 dark:hover:bg-violet-400 
+                        transition duration-200 active:translate-y-1 active:shadow-sm
+                        cursor-pointer'
             ></input>
             </label>
         </form>

@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Espaces from './pages/Espaces';
 import NvPassword from'./pages/accueil/NvPassword';
 import ResetPassword from './pages/accueil/ResetPassword';
+import Protected from './hooks/Protected';
 
 
 const router = createBrowserRouter([
@@ -64,7 +65,7 @@ function PageEspaces() {
   return (
     <div className="min-h-screen w-full flex flex-col justify-start items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500 w-full">
       <Header/>
-    {path?<Espaces/>:<Outlet/>}
+    {path ? <Protected Component={Espaces} />:<Protected Component={Outlet} />}
     </div>
   )
 }

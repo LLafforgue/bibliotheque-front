@@ -1,7 +1,6 @@
 import {useState} from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
 import fetchList from "../hooks/fetchList";
+import Icon from "../kit/Icons";
 
 export default function Salle({name, number, img, place, setRefresh, id}) {
     const [modifOn, setModifOn] = useState(false);
@@ -23,10 +22,12 @@ export default function Salle({name, number, img, place, setRefresh, id}) {
             {/*Titre et modification*/}
             <div className="w-full flex justify-between items-center">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{newName||name}</h3>
-            <FontAwesomeIcon icon={faPen} className="h-4 w-4 text-gray-600 dark:text-gray-400 cursor-pointer hover:text-emerald-300 dark:hover:text-violet-500"
-            onClick={()=>{
-                setModifOn(!modifOn);
-            }}
+            <Icon
+            type="pen"
+            title="modifier le nom de la salle"
+            action={()=>{setModifOn(!modifOn)}}
+            classNameFont="h-4 w-4 text-gray-600 dark:text-gray-400 cursor-pointer hover:text-emerald-300 dark:hover:text-violet-500"
+            tooltipClassName="bg-white dark:bg-gray-800 text-gray-800 dark:text-white text-sm"
             />
             </div>
             {modifOn&&<label htmlFor="name" className="w-full flex justify-center items-center gap-2">
