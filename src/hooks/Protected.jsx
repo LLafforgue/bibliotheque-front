@@ -14,11 +14,12 @@ export default function Protected({Component}) {
             try {
                 const response = await fetchList('auth', 'GET');
                 setTokenValid(response.result);
-                if (response.data) {
-                    setUserData(...response.data); // Stockage des données utilisateur
+                if (response?._doc) {
+                    setUserData({...response?._doc}); // Stockage des données utilisateur
                 }
             } catch (error) {
                 console.error("Erreur lors de la vérification du token :", error);
+                console.log('1')
                 setTokenValid(false);
             }
         }
@@ -36,7 +37,6 @@ export default function Protected({Component}) {
             </h3>
         );
     }
-
     // Passage des données utilisateur en props au composant protégé
     return <Component {...(userData && { user: userData })} />;
 }

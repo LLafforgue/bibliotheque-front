@@ -1,17 +1,24 @@
 import {useState} from "react";
+import { Reorder } from "framer-motion";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 
-export default function Salle({name, number, img, place, setRefresh, id}) {
+export default function Salle({name, number, lock, img, place, setRefresh, id, salle }) {
     const [modifOn, setModifOn] = useState(false);
     const [newName, setNewName] = useState('');
 
     const changeName = async () => {
         setRefresh(true);
-        await fetchList(`rubriques/${id}`,'PUT',{name:newName})
+        await fetchList(`rubriques/newname/${id}`,'PUT',{name:newName})
     }
-
-    return <div className="w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] p-5 mb-5 bg-white dark:bg-gray-800 rounded-full shadow-lg flex justify-between items-center">
+    return <Reorder.Item 
+            className="w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] p-5 mb-5
+                        flex justify-between items-center 
+                        bg-white dark:bg-gray-800 
+                        rounded-full shadow-lg"
+            value={salle}
+            dragListener = {!lock}
+            >
         {/*image container*/}
         <div className="w-16 h-16 bg-emerald-300 dark:bg-violet-500 rounded-full flex items-center justify-center">
             {/* <img src={``} alt={name} className="w-12 h-12 rounded-full"/> */}
@@ -44,7 +51,8 @@ export default function Salle({name, number, img, place, setRefresh, id}) {
                     setModifOn(false);
                     changeName(id);
                 }}
-                >Valider</button>
+                >Valider
+                </button>
             </label>}
         {/*Nombre de liens*/}
         <div className="text-gray-600 dark:text-gray-400">
@@ -52,5 +60,5 @@ export default function Salle({name, number, img, place, setRefresh, id}) {
         </div>
         </div>
 
-    </div>
+    </Reorder.Item>
 }
