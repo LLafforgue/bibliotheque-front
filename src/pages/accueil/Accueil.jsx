@@ -20,16 +20,23 @@ function Accueil() {
             animate={{ rotateY: mode?.toLowerCase() === 'register' ? 180 : 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
             style={{ transformStyle: "preserve-3d" }}
-            className='relative w-full min-h-[22rem] flex items-center justify-center'
+            className='relative w-full h-auto min-h-[26rem]'
           >
             {/* Face avant */}
-            <div className='p-5 w-full absolute inset-0 flex items-center justify-center bg-white/30 dark:bg-gray-800/30 rounded-lg shadow-lg [backface-visibility:hidden]'>
+            <div 
+            className='absolute inset-0 flex items-center justify-center 
+            p-5 w-full h-full 
+            bg-white/30 dark:bg-gray-800/30 
+            rounded-lg shadow-lg [backface-visibility:hidden]'>
               <Login setEmail={setEmail} setPassword={setPassword}/>
             </div>
 
             {/* Face arrière */}
             <div
-              className='p-5 w-full absolute inset-0 flex items-center justify-center bg-white/30 dark:bg-gray-800/30 rounded-lg shadow-lg [backface-visibility:hidden]'
+              className='absolute inset-0 flex items-center justify-center 
+              p-5 w-full h-full 
+              bg-white/30 dark:bg-gray-800/30 
+              rounded-lg shadow-lg [backface-visibility:hidden] overflow-y-auto'
               style={{ transform: "rotateY(180deg)" }}
             >
               <Register email={email} password={password}/>

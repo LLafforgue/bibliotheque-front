@@ -15,20 +15,32 @@ export default function Login ({setEmail, setPassword}) {
         id='Connexion'
         onSubmit={(e)=>{
             e.preventDefault();
-            fetchList('auth/users/login', 'POST', {email: e.target[0].value, password: e.target[1].value})
-            .then(data=>{
-                if(data.result){
-                    localStorage.clear();
-                    console.log(data.token);
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('username', data.data.username);
-                    navigate('/espaces', {replace:true});
+            fetchList('auth/users/login', 'POST', 
+                {
+                email: e.target[0].value,
+                password: e.target[1].value
+                }
+            )
+            .then(response => {
+                console.log(response.result)
+                if (response.result) {
+                localStorage.clear();
+                localStorage.setItem('token', response.token);
+                localStorage.setItem('username', response.data.username);
+
+                setEmail('');
+                setPassword('');
+
+                console.log(localStorage.getItem('token'));
+                navigate('/espaces', { replace: true });
                 } else {
-                    alert(data?.error)
+                alert(response?.message || "Identifiants incorrects");
                 }
             })
-            setEmail('');
-            setPassword('');
+            .catch(err => {
+                alert("Erreur réseau ou serveur");
+                console.error(err);
+            });
         }}
         className='flex flex-col gap-2 mt-2 justify-center items-center '>
             <label htmlFor="email">

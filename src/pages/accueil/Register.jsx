@@ -16,7 +16,6 @@ export default function Register ({email, password}) {
         for(let field in alert){
             if((field!='confirm'&&field!='notSent')&&!user[field]){
                 setAlert({...alert, [field]:true});
-                console.log(field)
                 return
             };
         };
@@ -35,15 +34,17 @@ export default function Register ({email, password}) {
         
         //Envoi des données
         try{
-        setLoading(true)
-        const result = await fetchList('auth/users/register', 'POST', user);
-        if(!result.result){
-        setAlert({...alert, notSent:result?.error?.toString()});
-        return
-        }
-        alert('Profil enregistré');
-        setUser({ username: '', firstname: '', email: '', password: '' });
-        navigate('/espaces', {replace:true});
+            setLoading(true)
+            const result = await fetchList('auth/users/register', 'POST', user);
+            if(result.error){
+            setAlert({...alert, notSent:result?.message?.toString()});
+            return
+            } else {
+            localStorage.clear();
+            localStorage.setItem('token', result.token);
+            localStorage.setItem('username', result.data?.username);
+            navigate('/espaces', {replace:true})
+            }
         return
 
         }catch(err){
@@ -55,7 +56,6 @@ export default function Register ({email, password}) {
 
     };
 
-    console.log(alert)
     return (
     <div className='w-80 p-5 border-2 rounded-md border-emerald-300 dark:border-violet-500 bg-gray-50 text-gray-800 dark:bg-gray-700'>
         <div className='flex flex-col gap-2 mt-2 justify-center items-center '>
