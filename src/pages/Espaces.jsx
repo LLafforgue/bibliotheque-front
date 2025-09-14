@@ -9,13 +9,16 @@ export default function Espaces() {
     
     useEffect(() => {
        const dataFetch = async () => {
-        const data = await fetchList('rubriques', 'GET');
-        setSallesUser(data.data);
+        const response = await fetchList('rubriques', 'GET');
+        response.error?
+        setSallesUser([])
+        :
+        setSallesUser(response.data);
        };
        dataFetch();
     }, [refresh]);
     
-    const salles = sallesUser.map((item,index) => {
+    const salles = sallesUser?.map((item,index) => {
                         return(
                     <Salle key={index} name={item.name} setRefresh={setRefresh} number={item.number} id={item._id}/>
                     )}
@@ -32,7 +35,7 @@ export default function Espaces() {
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-5">Vos salles</h3>
                 {/*Liste des salles*/}
                 {salles}
-                {salles.length===0&&<p className="text-gray-600 dark:text-gray-400">Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.</p>}
+                {sallesUser.length===0&&<p className="text-gray-600 dark:text-gray-400">Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.</p>}
             </div>
             
         </div>

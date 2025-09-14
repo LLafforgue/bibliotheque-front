@@ -5,6 +5,7 @@ import {motion} from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faUser, faBook, faStar, faRightFromBracket, faBell, faCog, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 import useMobile from "../hooks/UseMobile";
+import Icon from "../kit/Icons";
 
 
 export default function Header() {
@@ -25,10 +26,17 @@ export default function Header() {
 
       <nav className="mx-[10%] flex flex-wrap justify-center gap-6">
                
-        <NavLink to="/espaces" className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
-        <FontAwesomeIcon icon={faBook} className="h-4 w-4 dark:text-white"/>
-        {isMobile||'Salles'}
-        </NavLink>
+        {/* <NavLink to="/espaces" className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer"> */}
+        <Icon 
+        type={faBook} 
+        title='Accès aux salles' 
+        showTitle={true}
+        className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer"
+        tooltipClassName='bg-white dark:bg-gray-800 text-gray-800 dark:text-white text-sm' 
+        classNameFont="h-4 w-4 dark:text-white"
+        action={()=>navigate('/espaces')}
+        />
+        {/* </NavLink> */}
         
         <NavLink to='/espaces/nouvel' className="flex gap-2 items-center hover:scale-110 transition-transform cursor-pointer">
         <FontAwesomeIcon icon={faCog} className="h-4 w-4 dark:text-white"/>

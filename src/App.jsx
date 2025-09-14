@@ -62,7 +62,7 @@ function PageError () {
 function PageEspaces() {
   const path = useLocation().pathname==='/espaces'
   return (
-    <div className="min-h-screen w-full flex flex-col justify-between items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500 w-full">
+    <div className="min-h-screen w-full flex flex-col justify-start items-center bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 transition-colors duration-500 w-full">
       <Header/>
     {path?<Espaces/>:<Outlet/>}
     </div>

@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 Description
+## Description
 Ce projet permet aux utilisateurs connectés de :
 - **Stocker et organiser** des liens de manière plus interactive que les favoris classiques.
 - **Identifier automatiquement** les vidéos et autres médias.
@@ -13,19 +13,13 @@ Ce projet permet aux utilisateurs connectés de :
 
 ---
 
-## 🚀 État du projet
+## État du projet
 
-### ✅ **En développement actif**
+### **En développement actif**
 - **Authentification utilisateur** (UX finalisée)
   - Inscription (`/register`)
   - Connexion (`/login`)
   - Réinitialisation du mot de passe (`/NvPassword`)
-
-- **Interface utilisateur**
-  Développement en cours avec :
-  - React (Create React App)
-  - Tailwind CSS
-  - Framer Motion
 
 - **Fonctionnalités principales**
   En cours d'implémentation :
@@ -42,7 +36,7 @@ Ce projet permet aux utilisateurs connectés de :
 
 ---
 
-## 📂 Structure du projet
+## Structure du projet
 ```
 bibliotheque-front/
 ├── public/          # Fichiers statiques
@@ -55,7 +49,7 @@ bibliotheque-front/
 
 ---
 
-## 📥 Installation et lancement
+## Installation et lancement
 
 ### Prérequis
 - Node.js (version 16 ou supérieure)
@@ -79,7 +73,7 @@ bibliotheque-front/
 
 ---
 
-## 🎯 Fonctionnalités prévues
+## Fonctionnalités prévues
 - [x] Authentification utilisateur
 - [ ] Gestion des liens (ajout, suppression, organisation)
 - [ ] Identification automatique des vidéos
@@ -88,20 +82,10 @@ bibliotheque-front/
 
 ---
 
-## 🤝 Contribution
-Les contributions sont les bienvenues ! Pour participer :
-1. Forker le projet.
-2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/ma-fonctionnalite`).
-3. Commiter vos changements (`git commit -m "Ajout de ma fonctionnalité"`).
-4. Pousser la branche (`git push origin feature/ma-fonctionnalite`).
-5. Ouvrir une Pull Request.
-
----
-
-## 📜 Licence
+## Licence
 Ce projet est sous licence [MIT](LICENSE).
 
 ---
 
-## 📬 Contact
+## Contact
 Pour toute question ou suggestion, n'hésitez pas à ouvrir une [issue](https://github.com/LLafforgue/bibliotheque-front/issues) ou à me contacter directement.
