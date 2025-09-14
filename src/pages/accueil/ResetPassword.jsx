@@ -21,7 +21,6 @@ export default function ResetPassword() {
       return
     }
     if (password !== confirm) {
-      // alert("Les mots de passe ne correspondent pas");
       setAlert({...alert, confirm:true});
       return;
     }

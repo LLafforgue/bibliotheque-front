@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 export default function Header() {
   return (
     <div className="relative w-full h-64 overflow-hidden bg-gradient-to-b from-blue-200 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+      
+
       <svg
         className="absolute bottom-0 left-0 w-full h-64 backdrop-blur-sm"
         viewBox="0 0 1024 256"
