@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
 import Salle from "../components/Salle";
-import NvllSalle from "../components/NvllSalle";
+import NvllSalle from "../components/modales/NvllSalle";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 
@@ -94,9 +94,10 @@ export default function Espaces() {
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
-                                backdropFilter: "blur(5px)", // Flou de l'arrière-plan
-                                zIndex: 1000, // Assure que la modale est au-dessus du reste
+                                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                backdropFilter: "blur(5px)",
+                                zIndex: 1000,
+                                overflow: "visible"
                             }}
                             
                             >

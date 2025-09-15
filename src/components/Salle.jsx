@@ -2,7 +2,7 @@ import {useState} from "react";
 import { Reorder } from "framer-motion";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
-
+// mettre aussi les liens en props (à populate) + mettre un is visible pour afficher la liste de liens
 export default function Salle({name, number, lock, img, place, setRefresh, id, salle }) {
     const [modifOn, setModifOn] = useState(false);
     const [newName, setNewName] = useState('');
