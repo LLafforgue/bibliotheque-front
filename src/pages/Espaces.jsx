@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
-import { Reorder } from "framer-motion";
+import { Reorder, AnimatePresence, motion } from "framer-motion";
 import Salle from "../components/Salle";
+import NvllSalle from "../components/NvllSalle";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 
@@ -10,6 +11,7 @@ export default function Espaces() {
     const [sallesUser, setSallesUser] = useState([]);
     const [loader, setLoader] = useState(false);
     const [lock, setLock] = useState(true);
+    const [isVisible, setIsVisible] = useState(false)
     
     useEffect(() => {
         setLoader(true)
@@ -39,13 +41,13 @@ export default function Espaces() {
 
     const handlePosition = async () => {
         const newPositions = sallesUser.reduce(
-                                (acc, s, i) => s.position !== i + 1 ? [...acc, { _id: s._id, position: i+1 }] : acc,
+                                (acc, s, i) => s.position !== i + 1 ? [...acc, { _id: s._id, position: i + 1 }] : acc,
                                 []
                             );
         if(newPositions.length){
             const response = await fetchList('rubriques','PUT',{data:newPositions})
             response.result?
-            alert(response?.data?.toString()) : alert(response?.message?.toString()|response?.status?.toString())
+            alert(response?.data?.toString()) : alert(`erreur ${response?.status?.toString()} : ${response?.message?.toString()}`)
         }
         setLock(true)
     }
@@ -60,9 +62,10 @@ export default function Espaces() {
             <h2 className="my-1 text-3xl font-bold text-gray-800 dark:text-gray-200">Bienvenue dans vos salles</h2>
             <div className="w-full p-5 flex gap-2 justify-center items-center">
                 <Icon
-                type='salle'
+                type={isVisible&&'salleouverte'||'sallefermee'}
                 title="Ajouter une salle"
                 showTitle = {true}
+                action={()=>setIsVisible(!isVisible)}
                 tooltipClassName="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm"
                 classNameFont="mx-2 w-6 h-6 cursor-pointer font-bold"
                 className="
@@ -70,9 +73,36 @@ export default function Espaces() {
                 flex items-center justify-center
                 text-gray-800 dark:text-gray-200 
                 bg-emerald-300 dark:bg-violet-500 rounded-full shadow-lg
-                transition-color active:translate-y-1 active:shadow-sm
+                transition-color duration-200 active:translate-y-1 active:shadow-sm
                 hover:bg-emerald-400 dark:hover:bg-violet-400 cursor-pointer"
                 />
+                <AnimatePresence initial={false}>
+                {isVisible&&<motion.div
+                                initial={{ opacity: 0, scale: 0, y:-100 }}
+                                animate={{ opacity: 1, scale: 1, y:0 }}
+                                exit={{ opacity: 0, scale: 0, y:0 }}
+                                transition={{
+                                duration: 0.5, 
+                                ease: "easeInOut",
+                                }}
+                                style={{
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                backgroundColor: "rgba(0, 0, 0, 0.5)", // Fond semi-transparent
+                                backdropFilter: "blur(5px)", // Flou de l'arrière-plan
+                                zIndex: 1000, // Assure que la modale est au-dessus du reste
+                            }}
+                            
+                            >
+                                <NvllSalle setIsVisible={setIsVisible} refresh={setRefresh}/>
+                            </motion.div>}
+                </AnimatePresence>
                 {lock?
                 <Icon
                 type='lock'

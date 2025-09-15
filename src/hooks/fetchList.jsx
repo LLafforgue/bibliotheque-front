@@ -38,9 +38,9 @@ export default async function fetchList(endpoint, method = 'GET', body = null) {
     const data = await response.json()
 
     if (!data.result) {
-      const errorStatus = `Erreur serveur (${data.status}) `;
-      const errorMessage = data.error || 'une erreur est survenue' ;
-      return { error: true, status: response.status, message: errorMessage + errorStatus };
+      const errorStatus = `Erreur serveur (${data?.status}) `;
+      const errorMessage = data?.error ?? data?.data ?? 'une erreur est survenue' ;
+      return { error: true, status: response.status, message: `${errorMessage} ${errorStatus}` };
     }
 
     
