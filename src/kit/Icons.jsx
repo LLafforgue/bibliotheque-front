@@ -1,6 +1,7 @@
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faUser, faLock,faLockOpen, faXmark, faDoorClosed, faDoorOpen ,faBook, faStar, faRightFromBracket, faBell, faCog, faPlusCircle, faPen} from '@fortawesome/free-solid-svg-icons';
+import { faSquareCaretDown, faSquareCaretUp } from "@fortawesome/free-regular-svg-icons";
 import useMobile from "../hooks/UseMobile";
 
 // Mapping des noms d'icônes (strings) vers les icônes Font Awesome
@@ -17,7 +18,9 @@ const iconMap = {
   sallefermee: faDoorClosed,
   lock: faLock,
   unlock: faLockOpen,
-  fermer: faXmark
+  fermer: faXmark,
+  afficher:faSquareCaretDown,
+  replier: faSquareCaretUp
 };
 /**
  * Composant Icon avec tooltip intégré.

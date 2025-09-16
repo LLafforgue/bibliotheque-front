@@ -10,6 +10,7 @@ export default function Header() {
     const [hasAlert, setHasAlert] = useState(true); // Correction du nom de la variable
     const username = localStorage.getItem("username");
     const navigate = useNavigate();
+    
 
     return (
         <div className="w-full p-5 bg-emerald-300 dark:bg-violet-500 text-gray-800 dark:text-gray-50">
@@ -92,14 +93,7 @@ export default function Header() {
                     </motion.div>
                 </div>
 
-                <div className="flex items-center gap-2 ml-4">
-                    <Icon
-                        type="plusCircle"
-                        title="Ajouter un lien"
-                        tooltipClassName="bg-white dark:bg-gray-800 text-gray-800 dark:text-white text-sm"
-                        classNameFont="h-6 w-6 text-gray-800 dark:text-gray-50 hover:scale-110 transition-transform cursor-pointer"
-                    />
-                </div>
+                
             </motion.div>
 
             <ToggleDarkMode allContainer={false} className="fixed bottom-5 right-5" /> {/* Correction de "rigth" en "right" */}

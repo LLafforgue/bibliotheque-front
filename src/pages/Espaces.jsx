@@ -2,8 +2,10 @@ import {useState, useEffect} from "react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
 import Salle from "../components/Salle";
 import NvllSalle from "../components/modales/NvllSalle";
+import NvxLiens from "../components/modales/NvxLiens";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
+
 
 export default function Espaces() {
     //a changer pour un refresh quand il y aura des datas.
@@ -11,7 +13,9 @@ export default function Espaces() {
     const [sallesUser, setSallesUser] = useState([]);
     const [loader, setLoader] = useState(false);
     const [lock, setLock] = useState(true);
-    const [isVisible, setIsVisible] = useState(false)
+    const [isVisible, setIsVisible] = useState(false);
+    const [liensIsVisible, setLiensIsVisible] = useState(false);
+
     
     useEffect(() => {
         setLoader(true)
@@ -136,6 +140,48 @@ export default function Espaces() {
                 hover:bg-emerald-400 dark:hover:bg-violet-400"
                 />
                 }
+                <div className="flex items-center gap-2 ml-4">
+                    <Icon
+                        type="plusCircle"
+                        title="Ajouter un lien"
+                        tooltipClassName="bg-white dark:bg-gray-800 text-gray-800 dark:text-white text-sm"
+                        classNameFont="h-6 w-6 text-gray-800 dark:text-gray-50 hover:scale-110 transition-transform cursor-pointer"
+                        className="flex items-center gap-2 text-gray-800 dark:text-gray-50"
+                        showTitle={true}
+                        action = {()=>setLiensIsVisible(true)}
+                    />
+                    <AnimatePresence initial={false}>
+                        {liensIsVisible&&<motion.div
+                                        initial={{ opacity: 0, scale: 0, y:-100 }}
+                                        animate={{ opacity: 1, scale: 1, y:0 }}
+                                        exit={{ opacity: 0, scale: 0, y:0 }}
+                                        transition={{
+                                        duration: 0.5, 
+                                        ease: "easeInOut",
+                                        }}
+                                        style={{
+                                        position: "fixed",
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                        backdropFilter: "blur(5px)",
+                                        zIndex: 1000,
+                                        overflow: "visible"
+                                    }}
+                                    
+                                    >
+                                        <NvxLiens 
+                                            refresh={setRefresh} 
+                                            salles={sallesUser}
+                                            setIsVisible={setLiensIsVisible} />
+                                    </motion.div>}
+                    </AnimatePresence>
+                </div>
             </div>
             <div className="w-full max-h-5/6 flex flex-wrap flex-col justify-center items-center">
                 {/*Liste des salles*/}
@@ -149,7 +195,6 @@ export default function Espaces() {
                 {loader&&<span className="text-gray-600 dark:text-gray-400">Chargement des données</span>}
                 {!loader&&sallesUser.length===0&&<p className="text-gray-600 dark:text-gray-400">Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.</p>}
             </div>
-            
             
         </div>
     )
