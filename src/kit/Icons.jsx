@@ -65,6 +65,7 @@ const Icon = ({ title, type, action, showTitle=false, className = "", classNameF
                         data-[state=delayered-open]:data-[side=right]:animate-[slideLeftAndFade_0.3s_ease-out]
                         data-[state=delayered-open]:data-[side=left]:animate-[slideRightAndFade_0.3s_ease-out]
                         data-[state=delayered-open]:data-[side=bottom]:animate-[slideUpAndFade_0.3s_ease-out]
+                        z-[9999]
                         ${tooltipClassName}`}
             sideOffset={8}
           >
