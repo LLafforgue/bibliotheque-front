@@ -124,7 +124,7 @@ function Input({
           )}
         </Tooltip.Root>
       </Tooltip.Provider>
-      {alerte && !tooltipClassName && (
+      {alerte && (
         <p className="text-red-500 text-xs mt-1">{alerteMessage}</p>
       )}
     </div>

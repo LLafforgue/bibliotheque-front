@@ -5,7 +5,7 @@ import Icon from '../../kit/Icons';
 import fetchList from '../../hooks/fetchList';
 /**
  * ## Salles :
- * ajouter un bouteon de suppression des salles de la liste. 
+ * ajouter un bouton de suppression des salles de la liste. 
  * s'assurer que l'on ne peut pas selectionner plusieurs fois la même salle
  * @param {} param0 
  * @returns 
@@ -20,6 +20,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
             motsClefs: [],
             salles: [],
             isOpen: true,
+            alert : false
         },
     ]);
     const [alert, setAlert] = useState({
@@ -27,15 +28,31 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
         description: false,
         motsClefs: false,
         salle: false,
+        sanitized: false
     });
     const [loading, setLoading] = useState(false);
     const [selectedSalle, setSelectedSalle] = useState('');
-    const patern = new RegExp(';|,|\s');
+
+    //sanitized les entrées
+    function sanitizedEntries(id,input) {
+        if (!/^[a-zA-Z0-9\s,]+$/.test(input)) {
+            setLiens(liens.map((lien)=>
+            lien.id!==id? lien : {...lien, alert:true}
+        ));
+        setAlert({...alert, motsClefs:true })
+        return false
+        } else {
+            alert.motsClefs&&setAlert({...alert, motsClefs:false });
+            return true
+        }
+        }
+
+
 
     // Bascule l'état plié/déplié d'un lien
     const toggleLien = (id) => {
-        setLiens((prev) =>
-            prev.map((lien) =>
+        setLiens(
+            liens.map((lien) =>
                 lien.id === id ? { ...lien, isOpen: !lien.isOpen } : lien
             )
         );
@@ -44,7 +61,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
     // Supprimer un lien
     const removeLien = (id) => {
         if (liens.length > 1) {
-            setLiens((prev) => prev.filter((lien) => lien.id !== id));
+            setLiens(liens.filter((lien) => lien.id !== id));
         }
     };
 
@@ -62,8 +79,8 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
     // Ajoute un nouveau lien vide si le dernier est complet
     const addLien = () => {
         if (isLastLienComplete()) {
-            setLiens((prev) => [
-                ...prev,
+            setLiens([
+                ...liens,
                 {
                     id: crypto.randomUUID(),
                     href: '',
@@ -78,27 +95,52 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
 
     // Met à jour un champ spécifique d'un lien
     const handleChange = (id, field, value) => {
+    console.log(value)
+    console.log(liens)
+
         if (field !== 'salles') {
-            setLiens((prev) =>
-                prev.map((lien) =>
-                    lien.id === id ? { ...lien, [field]: value } : lien
+            setLiens(
+                liens.map((lien) =>
+                    lien.id === id ? { ...lien, [field]: value, alert:false } : lien
                 )
             );
         } else {
+            if(salles.some((e) => e.name===selectedSalle)){
             setSelectedSalle('');
-            setLiens((prev) =>
-                prev.map((lien) =>
+            setLiens(
+                liens.map((lien) =>
                     lien.id === id
                         ? {
                               ...lien,
-                              salles: [...lien.salles, value],
+                              salles: [...lien.salles.filter(e=>e!==value), value],
+                              alert:false
                           }
                         : lien
                 )
             );
+            alert.salle&&setAlert({...alert, salle:false });
+        } else {
+            setLiens(liens.map((lien)=>
+            lien.id!==id? lien : {...lien, alert:true}
+            ));
+            setAlert({...alert, salle:true })
+        }
         }
     };
 
+    //Supprime une salle
+    const deleteSalle = (id,value)=>{
+        setLiens(
+                liens.map((lien) =>
+                    lien.id === id
+                        ? {
+                              ...lien,
+                              salles: [...lien.salles.filter(e=>e!==value)],
+                          }
+                        : lien
+                )
+            );
+    }
     // Soumet la liste des liens
     const submitLiens = async () => {
         setLoading(true);
@@ -146,7 +188,6 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
             setLoading(false);
         }
     };
-
     return (
         <div
             role="dialog"
@@ -171,6 +212,8 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                 "
                 title="Fermer la fenêtre"
                 action={() => setIsVisible(false)}
+                tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+
             />
 
             <h3
@@ -228,15 +271,18 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                             hover:text-red-700
                                             cursor-pointer
                                         "
+                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+
                                     />
                                     <Icon
                                         type={lien.isOpen ? 'replier' : 'afficher'}
+                                        title={lien.isOpen ? 'Réduire' : 'Développer'}
                                         className="
                                             text-gray-600 dark:text-gray-300
                                             hover:text-gray-800 dark:hover:text-gray-100
                                         "
-                                        title={lien.isOpen ? 'Réduire' : 'Développer'}
                                         classNameFont="w-5 h-5"
+                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
                                     />
                                 </div>
                             </div>
@@ -258,14 +304,16 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                                 title="Sélectionner vos salles"
                                                 value={selectedSalle}
                                                 placeholder="Choisissez vos salles"
-                                                className="mb-0"
+                                                className="mb-0 w-[80%]"
                                                 inputClassName="w-full"
                                                 change={(e) => setSelectedSalle(e.target.value)}
                                                 autoBoxClassName="max-h-10"
                                                 autocomplete={true}
                                                 dataliste={salles.map((e) => e.name)}
                                                 onAutoClick={(e) => setSelectedSalle(e)}
-                                                helpMessage="Sélectionnez une salle dans la liste"
+                                                alerte={lien.alert&&alert.salle||alert.salle&&lien.salles.length===0}
+                                                alerteMessage={lien.alert?"Selectionnez une salle existante.":"Veuillez entrer au moins une salle."}
+
                                             />
                                             <Icon
                                                 type="pluscircle"
@@ -282,9 +330,10 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                                     transition-all cursor-pointer
                                                     active:translate-y-1 active:shadow-sm
                                                     hover:bg-emerald-400 dark:hover:bg-violet-400
-                                                    w-10 h-10
+                                                    w-7 h-7
                                                 "
-                                                classNameFont="w-5 h-5"
+                                                classNameFont="w-3 h-3"
+                                                tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
                                             />
                                         </div>
                                         <div className="flex flex-wrap gap-2">
@@ -292,13 +341,29 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                                 <span
                                                     key={i}
                                                     className="
+                                                        flex items-center gap-1
                                                         px-3 py-1
                                                         bg-emerald-100 dark:bg-gray-600
                                                         text-emerald-800 dark:text-gray-200
                                                         rounded-full text-sm
+                                                        transition-colors
+                                                        hover:bg-emerald-200 dark:hover:bg-gray-500
                                                     "
                                                 >
                                                     {salle}
+                                                    <Icon
+                                                        type="fermer"
+                                                        title="Supprimer la salle"
+                                                        className="
+                                                            ml-1 text-emerald-600 dark:text-gray-300
+                                                            hover:text-emerald-800 dark:hover:text-gray-100
+                                                            transition-colors
+                                                        "
+                                                        classNameFont="w-3.5 h-3.5"
+                                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+
+                                                        action={() => deleteSalle(lien.id, salle)}
+                                                    />
                                                 </span>
                                             ))}
                                         </div>
@@ -315,6 +380,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                         alerteMessage="Veuillez entrer une URL valide."
                                         className="mb-3"
                                         inputClassName="w-full"
+                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
                                     />
 
                                     {/* Titre du lien */}
@@ -339,16 +405,18 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                         placeholder="mot1, mot2, mot3"
                                         value={lien.motsClefs.join(', ')}
                                         change={(e) =>
-                                            handleChange(
+                                            sanitizedEntries(lien.id,e.target.value)&&handleChange(
                                                 lien.id,
                                                 'motsClefs',
-                                                e.target.value.split(patern).filter(Boolean)
+                                                e.target.value.split(/\s*,\s*/).filter(Boolean)
                                             )
                                         }
-                                        alerte={alert.motsClefs && lien.motsClefs.length === 0}
-                                        alerteMessage="Veuillez entrer au moins un mot-clé."
+                                        alerte={lien.alert||alert.motsClefs && lien.motsClefs.length === 0}
+                                        alerteMessage={lien.alert?"caractère invalide":"Veuillez entrer au moins un mot-clé."}
                                         className="mb-3"
                                         inputClassName="w-full"
+                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+
                                     />
                                 </motion.div>
                             )}
@@ -368,7 +436,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                             : 'Veuillez compléter ce lien'
                     }
                     tooltipClassName="
-                        bg-white dark:bg-gray-800
+                        bg-white dark:bg-gray-800 backdrop-blur-sm
                         text-gray-800 dark:text-gray-200
                         text-sm
                     "
@@ -384,6 +452,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                         }
                         w-12 h-12
                     `}
+                    
                     action={isLastLienComplete() ? addLien : undefined}
                 />
 
