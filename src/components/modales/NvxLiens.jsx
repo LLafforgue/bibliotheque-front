@@ -34,15 +34,15 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
     const [selectedSalle, setSelectedSalle] = useState('');
 
     //sanitized les entrées
-    function sanitizedEntries(id,input) {
+    function sanitizedEntries(id,field,input) {
         if (!/^[a-zA-Z0-9\s,]+$/.test(input)) {
             setLiens(liens.map((lien)=>
             lien.id!==id? lien : {...lien, alert:true}
         ));
-        setAlert({...alert, motsClefs:true })
+        setAlert({...alert, [field]:true })
         return false
         } else {
-            alert.motsClefs&&setAlert({...alert, motsClefs:false });
+            alert[field]&&setAlert({...alert, [field]:false });
             return true
         }
         }
@@ -390,10 +390,11 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                         placeholder="Titre du lien"
                                         value={lien.description}
                                         change={(e) =>
+                                            sanitizedEntries(lien.id,'description',e.target.value)&&
                                             handleChange(lien.id, 'description', e.target.value)
                                         }
-                                        alerte={alert.description && !lien.description}
-                                        alerteMessage="Veuillez entrer un titre."
+                                        alerte={alert.description&&lien.alert||alert.description && !lien.description}
+                                        alerteMessage={lien.alert?"caractère invalide détecté":"Veuillez entrer un titre."}
                                         className="mb-3"
                                         inputClassName="w-full"
                                     />
@@ -405,7 +406,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                         placeholder="mot1, mot2, mot3"
                                         value={lien.motsClefs.join(', ')}
                                         change={(e) =>
-                                            sanitizedEntries(lien.id,e.target.value)&&handleChange(
+                                            sanitizedEntries(lien.id,'motsClefs',e.target.value)&&handleChange(
                                                 lien.id,
                                                 'motsClefs',
                                                 e.target.value.split(/\s*,\s*/).filter(Boolean)
