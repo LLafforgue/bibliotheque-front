@@ -55,7 +55,8 @@ export default function Espaces() {
         }
         setLock(true)
     }
-    
+    console.log('Lien visible ', liensIsVisible)
+    console.log('refres ',refresh)
     return (
         <div className="
             min-h-screen w-full
@@ -80,6 +81,7 @@ export default function Espaces() {
                 transition-color duration-200 active:translate-y-1 active:shadow-sm
                 hover:bg-emerald-400 dark:hover:bg-violet-400 cursor-pointer"
                 />
+                {/*Modale pour une nouvelle salle*/}
                 <AnimatePresence initial={false}>
                 {isVisible&&<motion.div
                                 initial={{ opacity: 0, scale: 0, y:-100 }}
@@ -108,6 +110,8 @@ export default function Espaces() {
                                 <NvllSalle setIsVisible={setIsVisible} refresh={setRefresh}/>
                             </motion.div>}
                 </AnimatePresence>
+
+                {/*Gestion Drag & Drop de l'ordre des salles*/}
                 {lock?
                 <Icon
                 type='lock'
@@ -140,6 +144,8 @@ export default function Espaces() {
                 hover:bg-emerald-400 dark:hover:bg-violet-400"
                 />
                 }
+
+                {/*Modale pour nouveau lien*/}
                 <div className="flex items-center gap-2 ml-4">
                     <Icon
                         type="plusCircle"
@@ -184,6 +190,7 @@ export default function Espaces() {
                 </div>
             </div>
             <div className="w-full max-h-5/6 flex flex-wrap flex-col justify-center items-center">
+            
                 {/*Liste des salles*/}
                 <Reorder.Group
                 className="w-full flex flex-wrap flex-col justify-center items-center"

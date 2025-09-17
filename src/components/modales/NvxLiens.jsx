@@ -3,10 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Input from '../../kit/Input';
 import Icon from '../../kit/Icons';
 import fetchList from '../../hooks/fetchList';
+
 /**
- * ## Salles :
- * ajouter un bouton de suppression des salles de la liste. 
- * s'assurer que l'on ne peut pas selectionner plusieurs fois la même salle
+ * Revoir l'ajout des mots clefs et permettre les tirets et lettres avec accents
  * @param {} param0 
  * @returns 
  */
@@ -32,10 +31,11 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
     });
     const [loading, setLoading] = useState(false);
     const [selectedSalle, setSelectedSalle] = useState('');
+    const [motClef, setMotClef] = useState('')
 
     //sanitized les entrées
     function sanitizedEntries(id,field,input) {
-        if (!/^[a-zA-Z0-9\s,]+$/.test(input)) {
+        if (/[\u0027\u003C\u003E\u0028\u0029\u0024\u007C\u0060]/.test(input)) {
             setLiens(liens.map((lien)=>
             lien.id!==id? lien : {...lien, alert:true}
         ));
@@ -95,16 +95,15 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
 
     // Met à jour un champ spécifique d'un lien
     const handleChange = (id, field, value) => {
-    console.log(value)
-    console.log(liens)
+    
 
-        if (field !== 'salles') {
+        if (field !== 'salles'&&field !=='motsClefs') {
             setLiens(
                 liens.map((lien) =>
                     lien.id === id ? { ...lien, [field]: value, alert:false } : lien
                 )
             );
-        } else {
+        } else if (field === 'salles') {
             if(salles.some((e) => e.name===selectedSalle)){
             setSelectedSalle('');
             setLiens(
@@ -125,6 +124,14 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
             ));
             setAlert({...alert, salle:true })
         }
+        } else {
+            setLiens(liens.map(lien=> lien.id===id
+                ? {
+                    ...lien, 
+                    motsClefs: [...lien.motsClefs, value],
+                    alert:false
+                }
+                : lien))
         }
     };
 
@@ -135,12 +142,27 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                     lien.id === id
                         ? {
                               ...lien,
-                              salles: [...lien.salles.filter(e=>e!==value)],
+                              salles: lien.salles.filter(e=>e!==value),
                           }
                         : lien
                 )
             );
     }
+
+    //Supprime un mot clef
+    const deleteMotClef = (id, value)=>{
+            setLiens(
+                liens.map(lien =>
+                    lien.id === id
+                        ? {
+                            ...lien,
+                            motsClefs: lien.motsClefs.filter(e => e.toLowerCase() !== value.toLowerCase())
+                        }
+                        : lien
+                )
+            );
+    }
+    
     // Soumet la liste des liens
     const submitLiens = async () => {
         setLoading(true);
@@ -162,13 +184,20 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
             setLoading(false);
             return;
         }
-
+        const data = liens.map(({ href, description, salles, motsClefs }) => ({
+                                    href,
+                                    description,
+                                    salles,
+                                    motsClefs
+                                    }));
         try {
-            const response = await fetchList('liens', 'POST', { liens });
+            const response = await fetchList('liens', 'POST', { data });
+
             if (response.result) {
-                setLoading(false);
+                refresh((prev)=>!prev);
                 setIsVisible(false);
-                refresh(true);
+                alert('Liens bien ajoutés');
+                setLoading(false);
             } else {
                 setAlert({
                     href: true,
@@ -211,7 +240,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                     hover:text-red-500 cursor-pointer z-10
                 "
                 title="Fermer la fenêtre"
-                action={() => setIsVisible(false)}
+                action={() => {setIsVisible(false); refresh(prev=>!prev)}}
                 tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
 
             />
@@ -256,7 +285,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                 onClick={() => toggleLien(lien.id)}
                             >
                                 <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                    Lien {index + 1}
+                                    Lien {index + 1} : {lien.isOpen||lien.description}
                                 </h4>
                                 <div className="flex items-center gap-3">
                                     <Icon
@@ -315,12 +344,20 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                                 alerteMessage={lien.alert?"Selectionnez une salle existante.":"Veuillez entrer au moins une salle."}
 
                                             />
-                                            <Icon
+                                            {selectedSalle.length>1&&
+                                            (<motion.button
+                                                onClick = {()=>{handleChange(lien.id, 'salles', selectedSalle)}}
+                                                whileTap = {{sclale:0.95}}
+                                                animate = {{scale:[1,1.1,1]}}
+                                                transition = {{
+                                                    duration : 1.5,
+                                                    repeat: Infinity,
+                                                    ease:"easeInOut"
+                                                }}
+                                                >
+                                                <Icon
                                                 type="pluscircle"
                                                 title="Ajouter la salle choisie"
-                                                action={() =>
-                                                    handleChange(lien.id, 'salles', selectedSalle)
-                                                }
                                                 className="
                                                     my-2 p-2
                                                     flex items-center justify-center
@@ -334,7 +371,8 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                                 "
                                                 classNameFont="w-3 h-3"
                                                 tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
-                                            />
+                                                />
+                                            </motion.button>)}
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {lien.salles?.map((salle, i) => (
@@ -360,7 +398,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                                             transition-colors
                                                         "
                                                         classNameFont="w-3.5 h-3.5"
-                                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+                                                        tooltipClassName='backdrop-blur-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-50'
 
                                                         action={() => deleteSalle(lien.id, salle)}
                                                     />
@@ -400,25 +438,90 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
                                     />
 
                                     {/* Mots-clés */}
-                                    <Input
-                                        type="text"
-                                        title="Mots-clés"
-                                        placeholder="mot1, mot2, mot3"
-                                        value={lien.motsClefs.join(', ')}
-                                        change={(e) =>
-                                            sanitizedEntries(lien.id,'motsClefs',e.target.value)&&handleChange(
-                                                lien.id,
-                                                'motsClefs',
-                                                e.target.value.split(/\s*,\s*/).filter(Boolean)
-                                            )
-                                        }
-                                        alerte={lien.alert||alert.motsClefs && lien.motsClefs.length === 0}
-                                        alerteMessage={lien.alert?"caractère invalide":"Veuillez entrer au moins un mot-clé."}
-                                        className="mb-3"
-                                        inputClassName="w-full"
-                                        tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+                                    
+                                    <div className="mb-3 flex flex-col gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <Input
+                                                type="text"
+                                                title="Sélectionner vos mots clefs"
+                                                value={motClef}
+                                                placeholder="Choisissez votre mot clef"
+                                                className="mb-0 w-[80%]"
+                                                inputClassName="w-full"
+                                                change={(e) => {sanitizedEntries(e.target.value)&&setMotClef(e.target.value)}}
+                                                autoBoxClassName="max-h-10"
+                                                autocomplete={true}
+                                                dataliste={liens.flatMap((e) => e?.motsClefs)}
+                                                onAutoClick={(e) => setMotClef(e)}
+                                                alerte={alert.motsClefs&&lien.alert||alert.motsClefs && lien.motsClefs.length === 0}
+                                                alerteMessage={lien.alert?"caractère invalide":"Veuillez entrer au moins un mot-clé."}
+                                            />
+                                            {motClef.length>1&&
+                                            <motion.button
+                                                onClick = {() =>{
+                                                    setMotClef('');
+                                                    handleChange(lien.id, 'motsClefs', motClef);
+                                                }}
+                                                whileTap = {{sclale:0.95}}
+                                                animate = {{scale:[1,1.1,1]}}
+                                                transition = {{
+                                                    duration : 1.5,
+                                                    repeat: Infinity,
+                                                    ease:"easeInOut"
+                                                }}
+                                                >
+                                                    <Icon
+                                                type="pluscircle"
+                                                title="Ajouter le mot clef"
+                                                className="
+                                                    my-2 p-2
+                                                    flex items-center justify-center
+                                                    text-gray-800 dark:text-gray-200
+                                                    bg-emerald-300 dark:bg-violet-500
+                                                    rounded-full shadow-lg
+                                                    transition-all cursor-pointer
+                                                    active:translate-y-1 active:shadow-sm
+                                                    hover:bg-emerald-400 dark:hover:bg-violet-400
+                                                    w-7 h-7
+                                                "
+                                                classNameFont="w-3 h-3"
+                                                tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
+                                            />
+                                            </motion.button>}
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {lien.motsClefs?.map((mot, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="
+                                                        flex items-center gap-1
+                                                        px-3 py-1
+                                                        bg-emerald-100 dark:bg-gray-600
+                                                        text-emerald-800 dark:text-gray-200
+                                                        rounded-full text-sm
+                                                        transition-colors
+                                                        hover:bg-emerald-200 dark:hover:bg-gray-500
+                                                    "
+                                                >
+                                                    {mot}
+                                                    <Icon
+                                                        type="fermer"
+                                                        title="Supprimer la salle"
+                                                        className="
+                                                            ml-1 text-emerald-600 dark:text-gray-300
+                                                            hover:text-emerald-800 dark:hover:text-gray-100
+                                                            transition-colors
+                                                        "
+                                                        classNameFont="w-3.5 h-3.5"
+                                                        tooltipClassName='backdrop-blur-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-50'
 
-                                    />
+                                                        action={() => deleteMotClef(lien.id, mot)}
+                                                    />
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
                                 </motion.div>
                             )}
                         </motion.div>

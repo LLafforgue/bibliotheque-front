@@ -20,7 +20,7 @@ export default function NvllSalle({ refresh, setIsVisible }) {
       if (response.result) {
         setLoading(false);
         setIsVisible(false);
-        refresh(true);
+        refresh((prev)=>!prev);
       } else {
         setAlert(true);
         setLoading(false);
