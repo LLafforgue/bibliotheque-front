@@ -16,7 +16,12 @@ export default function Espaces() {
     const [isVisible, setIsVisible] = useState(false);
     const [liensIsVisible, setLiensIsVisible] = useState(false);
 
-    
+    const loadLiens = (id)=>{
+        const liens = sallesUser.filter(s=>s._id===id)[0].liens
+        console.log(liens);
+
+    };
+
     useEffect(() => {
         setLoader(true)
        const dataFetch = async () => {
@@ -29,10 +34,11 @@ export default function Espaces() {
        };
        dataFetch();
     }, [refresh]);
-    
+    console.log(sallesUser[0]?.liens)
     const salles = sallesUser?.map((item) => {
                         return(  
                                 <Salle 
+                                    onSalleClick={()=>loadLiens(item._id)}
                                     key={item._id} 
                                     salle={item} 
                                     name={item.name} 
@@ -189,9 +195,9 @@ export default function Espaces() {
                     </AnimatePresence>
                 </div>
             </div>
+            {/*Affichage des salle*/}
             <div className="w-full max-h-5/6 flex flex-wrap flex-col justify-center items-center">
-            
-                {/*Liste des salles*/}
+        
                 <Reorder.Group
                 className="w-full flex flex-wrap flex-col justify-center items-center"
                 values={sallesUser}
@@ -201,6 +207,7 @@ export default function Espaces() {
                 </Reorder.Group>
                 {loader&&<span className="text-gray-600 dark:text-gray-400">Chargement des données</span>}
                 {!loader&&sallesUser.length===0&&<p className="text-gray-600 dark:text-gray-400">Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.</p>}
+                
             </div>
             
         </div>

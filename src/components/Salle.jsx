@@ -3,7 +3,7 @@ import { Reorder } from "framer-motion";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 // mettre aussi les liens en props (à populate) + mettre un is visible pour afficher la liste de liens
-export default function Salle({name, number, lock, img, place, setRefresh, id, salle }) {
+export default function Salle({name, number, lock, img, place, setRefresh, id, salle, onSalleClick }) {
     const [modifOn, setModifOn] = useState(false);
     const [newName, setNewName] = useState('');
 
@@ -20,7 +20,7 @@ export default function Salle({name, number, lock, img, place, setRefresh, id, s
             dragListener = {!lock}
             >
         {/*image container*/}
-        <div className="w-16 h-16 bg-emerald-300 dark:bg-violet-500 rounded-full flex items-center justify-center">
+        <div onClick={()=>onSalleClick()} className="w-16 h-16 bg-emerald-300 dark:bg-violet-500 rounded-full flex items-center justify-center">
             {/* <img src={``} alt={name} className="w-12 h-12 rounded-full"/> */}
             image
         </div>

@@ -5,7 +5,7 @@ import Icon from '../../kit/Icons';
 import fetchList from '../../hooks/fetchList';
 
 /**
- * Revoir l'ajout des mots clefs et permettre les tirets et lettres avec accents
+ * 
  * @param {} param0 
  * @returns 
  */
