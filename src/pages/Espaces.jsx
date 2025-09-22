@@ -5,47 +5,10 @@ import NvllSalle from "../components/modales/NvllSalle";
 import NvxLiens from "../components/modales/NvxLiens";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
-
+import useMobile from "../hooks/UseMobile";
+import Lien from "../components/Liens";
 // Ajoutez ce composant Lien en haut de votre fichier (ou dans un fichier séparé)
-const Lien = ({ href, description, onClose }) => {
-  const handleClick = (e) => {
-    e.stopPropagation(); // Empêche la propagation du clic vers la salle
-    window.open(href, '_blank', 'noopener,noreferrer');
-  };
 
-  return (
-    <div
-      className="mb-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md
-                 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
-                 flex items-center justify-between cursor-pointer"
-      onClick={handleClick}
-    >
-      <div className="flex items-center">
-        <Icon
-          type="link"
-          className="mr-2 text-blue-500 dark:text-blue-300"
-        />
-        <div>
-          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate max-w-xs">
-            {description}
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
-            {new URL(href).hostname}
-          </p>
-        </div>
-      </div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-      >
-        <Icon type="close" className="w-4 h-4" />
-      </button>
-    </div>
-  );
-};
 
 export default function Espaces() {
     //a changer pour un refresh quand il y aura des datas.
@@ -55,14 +18,21 @@ export default function Espaces() {
     const [lock, setLock] = useState(true);
     const [isVisible, setIsVisible] = useState(false);
     const [liensIsVisible, setLiensIsVisible] = useState(false);
+    const [visibleLiens, setVisibleLiens] = useState([]);
     const [salleActiveId, setSalleActiveId] = useState(null);
+
+    const isMobile = useMobile(); //Bollean qui est true si la taille de la fenètre est inférieure à 1000px
 
     const loadLiens = (id)=>{
         const liens = sallesUser.filter(s=>s._id===id)[0].liens
         setSalleActiveId(id)
         console.log(liens);
 
-    };
+        setVisibleLiens( liens.map((l)=>{
+            return <Lien key = {l._id} href= {l.href} description={l.description} onClose/>
+        }))
+
+        };
 
     useEffect(() => {
         setLoader(true)
@@ -76,12 +46,12 @@ export default function Espaces() {
        };
        dataFetch();
     }, [refresh]);
-    console.log(sallesUser[0]?.liens)
+
     const salles = sallesUser?.map((s) => {
-                        return(  
+                        return( 
                                 <Salle 
                                     onSalleClick={()=>loadLiens(s._id)}
-                                    key={s._id} 
+                                    key={s._id}
                                     salle={s} 
                                     name={s.name} 
                                     setRefresh={setRefresh} 
@@ -89,6 +59,7 @@ export default function Espaces() {
                                     id={s._id}
                                     lock={lock}
                                     isActive={salleActiveId === s._id}/>
+                                        
                              )}
                 );
 
@@ -106,12 +77,11 @@ export default function Espaces() {
     }
     
     return (
-        <div className="
-            min-h-screen w-full
-            flex flex-col items-center
-            bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900
-            transition-colors duration-500
-                        ">
+        <div className="min-h-screen w-full 
+                        flex flex-col items-center 
+                        bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 
+                        transition-colors duration-500">
+                            
             <h2 className="my-1 text-3xl font-bold text-gray-800 dark:text-gray-200">Bienvenue dans vos salles</h2>
             <div className="w-full p-5 flex gap-2 justify-center items-center">
                 <Icon
@@ -238,10 +208,10 @@ export default function Espaces() {
                 </div>
             </div>
             {/*Affichage des salle*/}
-            <div className="w-full max-h-5/6 flex flex-wrap flex-col justify-center items-center">
+            <div className="w-full max-h-5/6 flex justify-center items-start">
         
                 <Reorder.Group
-                className="w-full flex flex-wrap flex-col justify-center items-center"
+                className="flex flex-wrap flex-col justify-center items-center"
                 values={sallesUser}
                 onReorder={setSallesUser}
                 >
@@ -249,8 +219,31 @@ export default function Espaces() {
                 </Reorder.Group>
                 {loader&&<span className="text-gray-600 dark:text-gray-400">Chargement des données</span>}
                 {!loader&&sallesUser.length===0&&<p className="text-gray-600 dark:text-gray-400">Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.</p>}
-                
+                {/*affichage des liens*/} 
+                {visibleLiens?.length>0 && (
+                                            <motion.div
+                                                initial={{ opacity: 0, x: 20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{ opacity: 0, x: 20 }}
+                                                className="ml-2 w-1/2 relative"
+                                            >
+                                                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-3 border border-gray-200 dark:border-gray-700 fixed">
+                                                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex justify-between mb-2">
+                                                    Liens associés à {sallesUser.find((e)=>e._id===salleActiveId).name}
+                                                    <Icon type='fermer' title="Fermer" action={()=>setVisibleLiens([])}/>
+                                                </h3>
+                                                    {visibleLiens.length>0
+                                                    ? visibleLiens
+                                                    :(
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                                                    Aucun lien pour cette salle
+                                                    </p>
+                                                    )}
+                                                    </div>
+                                            </motion.div>
+                                            )}
             </div>
+            
             
         </div>
     )
