@@ -207,41 +207,68 @@ export default function Espaces() {
                     </AnimatePresence>
                 </div>
             </div>
-            {/*Affichage des salle*/}
-            <div className="w-full max-h-5/6 flex justify-center items-start">
-        
-                <Reorder.Group
-                className="flex flex-wrap flex-col justify-center items-center"
-                values={sallesUser}
-                onReorder={setSallesUser}
-                >
-                {salles}
-                </Reorder.Group>
-                {loader&&<span className="text-gray-600 dark:text-gray-400">Chargement des données</span>}
-                {!loader&&sallesUser.length===0&&<p className="text-gray-600 dark:text-gray-400">Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.</p>}
-                {/*affichage des liens*/} 
-                {visibleLiens?.length>0 && (
-                                            <motion.div
-                                                initial={{ opacity: 0, x: 20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: 20 }}
-                                                className="ml-2 w-1/2 relative"
-                                            >
-                                                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-3 border border-gray-200 dark:border-gray-700 fixed">
-                                                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex justify-between mb-2">
-                                                    Liens associés à {sallesUser.find((e)=>e._id===salleActiveId).name}
-                                                    <Icon type='fermer' title="Fermer" action={()=>setVisibleLiens([])}/>
-                                                </h3>
-                                                    {visibleLiens.length>0
-                                                    ? visibleLiens
-                                                    :(
-                                                    <p className="text-sm text-gray-500 dark:text-gray-400 p-2">
-                                                    Aucun lien pour cette salle
-                                                    </p>
-                                                    )}
-                                                    </div>
-                                            </motion.div>
-                                            )}
+                {/*Affichage des salle + liens*/}
+                <div className={`w-full max-h-5/6 flex justify-center items-start ${isMobile ? "flex-col" : "flex-row"}`}>
+                    {/* Liste des salles */}
+                    <Reorder.Group
+                        className="flex flex-wrap flex-col justify-center items-center flex-1"
+                        values={sallesUser}
+                        onReorder={setSallesUser}
+                    >
+                        {salles}
+                    </Reorder.Group>
+
+                    {loader && <span className="text-gray-600 dark:text-gray-400">Chargement des données</span>}
+                    {!loader && sallesUser.length === 0 && (
+                        <p className="text-gray-600 dark:text-gray-400">
+                            Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.
+                        </p>
+                    )}
+                {/* Affichage des liens */}
+                {visibleLiens?.length > 0 && (
+                    <motion.div
+                        initial={{
+                            opacity: 0,
+                            x: isMobile ? "100%" : 20, // mobile = glisse de droite
+                            y: 0
+                        }}
+                        animate={{
+                            opacity: 1,
+                            x: 0,
+                            y: 0
+                        }}
+                        exit={{
+                            opacity: 0,
+                            x: isMobile ? "100%" : 20, // repart sur la droite
+                            y: 0
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className={`
+                            ${isMobile 
+                                ? "fixed inset-0 w-full h-full z-50 p-4 flex flex-col bg-white dark:bg-gray-900" 
+                                : "ml-4 w-1/2 relative"
+                            }
+                        `}
+                    >
+                        <div className={`rounded-lg shadow-xl p-3 border border-gray-200 dark:border-gray-700 
+                                        ${isMobile ? "flex-1 overflow-y-auto" : "bg-white dark:bg-gray-800"}`}>
+                            
+                            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex justify-between mb-2">
+                                Liens associés à {sallesUser.find((e)=>e._id===salleActiveId).name}
+                                <Icon type="fermer" title="Fermer" action={() => setVisibleLiens([])} />
+                            </h3>
+
+                            {visibleLiens.length > 0 ? (
+                                visibleLiens
+                            ) : (
+                                <p className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                                    Aucun lien pour cette salle
+                                </p>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+
             </div>
             
             
