@@ -3,24 +3,26 @@ import { Reorder } from "framer-motion";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 // mettre aussi les liens en props (à populate) + mettre un is visible pour afficher la liste de liens
-export default function Salle({name, number, lock, img, place, setRefresh, id, salle, onSalleClick }) {
+export default function Salle({name, number, lock, img, place, setRefresh, id, salle, onSalleClick , isActive}) {
     const [modifOn, setModifOn] = useState(false);
     const [newName, setNewName] = useState('');
-
+    const active = isActive? 'border-2 border-emerald-800 dark:border-violet-800' : ''
     const changeName = async () => {
         setRefresh(true);
         await fetchList(`rubriques/newname/${id}`,'PUT',{name:newName})
     }
     return <Reorder.Item 
-            className="w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] p-5 mb-5
+            onClick={()=>lock&&onSalleClick()}
+            className={`w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] p-5 mb-5
                         flex justify-between items-center 
-                        bg-white dark:bg-gray-800 
-                        rounded-full shadow-lg"
+                        bg-white dark:bg-gray-800
+                        ${active} 
+                        rounded-full shadow-lg `}
             value={salle}
             dragListener = {!lock}
             >
         {/*image container*/}
-        <div onClick={()=>onSalleClick()} className="w-16 h-16 bg-emerald-300 dark:bg-violet-500 rounded-full flex items-center justify-center">
+        <div  className="w-16 h-16 bg-emerald-300 dark:bg-violet-500 rounded-full flex items-center justify-center">
             {/* <img src={``} alt={name} className="w-12 h-12 rounded-full"/> */}
             image
         </div>

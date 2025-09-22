@@ -6,6 +6,46 @@ import NvxLiens from "../components/modales/NvxLiens";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 
+// Ajoutez ce composant Lien en haut de votre fichier (ou dans un fichier séparé)
+const Lien = ({ href, description, onClose }) => {
+  const handleClick = (e) => {
+    e.stopPropagation(); // Empêche la propagation du clic vers la salle
+    window.open(href, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div
+      className="mb-2 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md
+                 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors
+                 flex items-center justify-between cursor-pointer"
+      onClick={handleClick}
+    >
+      <div className="flex items-center">
+        <Icon
+          type="link"
+          className="mr-2 text-blue-500 dark:text-blue-300"
+        />
+        <div>
+          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate max-w-xs">
+            {description}
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
+            {new URL(href).hostname}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+      >
+        <Icon type="close" className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
 
 export default function Espaces() {
     //a changer pour un refresh quand il y aura des datas.
@@ -15,9 +55,11 @@ export default function Espaces() {
     const [lock, setLock] = useState(true);
     const [isVisible, setIsVisible] = useState(false);
     const [liensIsVisible, setLiensIsVisible] = useState(false);
+    const [salleActiveId, setSalleActiveId] = useState(null);
 
     const loadLiens = (id)=>{
         const liens = sallesUser.filter(s=>s._id===id)[0].liens
+        setSalleActiveId(id)
         console.log(liens);
 
     };
@@ -35,17 +77,18 @@ export default function Espaces() {
        dataFetch();
     }, [refresh]);
     console.log(sallesUser[0]?.liens)
-    const salles = sallesUser?.map((item) => {
+    const salles = sallesUser?.map((s) => {
                         return(  
                                 <Salle 
-                                    onSalleClick={()=>loadLiens(item._id)}
-                                    key={item._id} 
-                                    salle={item} 
-                                    name={item.name} 
+                                    onSalleClick={()=>loadLiens(s._id)}
+                                    key={s._id} 
+                                    salle={s} 
+                                    name={s.name} 
                                     setRefresh={setRefresh} 
-                                    number={item.number} 
-                                    id={item._id}
-                                    lock={lock}/>
+                                    number={s.number} 
+                                    id={s._id}
+                                    lock={lock}
+                                    isActive={salleActiveId === s._id}/>
                              )}
                 );
 
@@ -61,8 +104,7 @@ export default function Espaces() {
         }
         setLock(true)
     }
-    console.log('Lien visible ', liensIsVisible)
-    console.log('refres ',refresh)
+    
     return (
         <div className="
             min-h-screen w-full

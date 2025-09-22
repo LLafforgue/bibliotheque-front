@@ -67,11 +67,9 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
 
     // Vérifie si le dernier lien est complet
     const isLastLienComplete = () => {
-        const lastLien = liens[liens.length - 1];
+        const lastLien = liens.at(-1);
         return (
             lastLien.href &&
-            lastLien.description &&
-            lastLien.motsClefs.length > 0 &&
             lastLien.salles.length > 0
         );
     };
