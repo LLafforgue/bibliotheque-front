@@ -20,8 +20,8 @@ export default function Espaces() {
     const [liensIsVisible, setLiensIsVisible] = useState(false);
     const [visibleLiens, setVisibleLiens] = useState([]);
     const [salleActiveId, setSalleActiveId] = useState(null);
-
-    const isMobile = useMobile(); //Bollean qui est true si la taille de la fenètre est inférieure à 1000px
+    //Détecteur de réduction de taille de fenètre
+    const isMobile = useMobile();
 
     const loadLiens = (id)=>{
         const liens = sallesUser.filter(s=>s._id===id)[0].liens
@@ -29,7 +29,7 @@ export default function Espaces() {
         console.log(liens);
 
         setVisibleLiens( liens.map((l)=>{
-            return <Lien key = {l._id} href= {l.href} description={l.description} onClose/>
+            return <Lien key = {l._id} href= {l.href} description={l.description} id={l._id} fav={l.favoris} refresh={setRefresh}/>
         }))
 
         };
@@ -208,10 +208,10 @@ export default function Espaces() {
                 </div>
             </div>
                 {/*Affichage des salle + liens*/}
-                <div className={`w-full max-h-5/6 flex justify-center items-start ${isMobile ? "flex-col" : "flex-row"}`}>
+                <div className={`w-full max-h-5/6 flex  justify-center items-start ${isMobile ? "flex-col" : "flex-row"}`}>
                     {/* Liste des salles */}
                     <Reorder.Group
-                        className="flex flex-wrap flex-col justify-center items-center flex-1"
+                        className="flex  flex-col justify-center items-center flex-1"
                         values={sallesUser}
                         onReorder={setSallesUser}
                     >
@@ -245,13 +245,13 @@ export default function Espaces() {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className={`
                             ${isMobile 
-                                ? "fixed inset-0 w-full h-full z-50 p-4 flex flex-col bg-white dark:bg-gray-900" 
+                                ? "fixed inset-0 w-full h-full z-50 p-4 flex flex-col items-center bg-white dark:bg-gray-900" 
                                 : "ml-4 w-1/2 relative"
                             }
                         `}
                     >
-                        <div className={`rounded-lg shadow-xl p-3 border border-gray-200 dark:border-gray-700 
-                                        ${isMobile ? "flex-1 overflow-y-auto" : "bg-white dark:bg-gray-800"}`}>
+                        <div className={` rounded-lg shadow-xl overflow-y-auto p-3 border border-gray-200 dark:border-gray-700 
+                                        ${isMobile ? "flex-1 w-4/5" : "fixed bg-white dark:bg-gray-800"}`}>
                             
                             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex justify-between mb-2">
                                 Liens associés à {sallesUser.find((e)=>e._id===salleActiveId).name}

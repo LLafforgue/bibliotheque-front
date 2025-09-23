@@ -1,11 +1,25 @@
+import { useState } from "react";
 import Icon from "../kit/Icons";
 import fetchList from "../hooks/fetchList";
 
-function Lien ({ href, description }) {
+function Lien ({ id, href, description, refresh, fav }) {
+  const [favoris, setFavoris] = useState(fav)
+  const favorisStyle = favoris? 'text-yellow-600 hover:text-gray-600' : 'text-gray-300 hover:text-yellow-400'
+
   const handleClick = (e) => {
     e.stopPropagation();
     window.open(href, '_blank', 'noopener,noreferrer');
   };
+
+  const handleFav = async () => {
+    const response = await fetchList(`liens/favoris/${id}`,'PUT');
+    if(response.result) {
+        // setFavoris(response.data.favoris)
+        refresh(prev=>!prev)
+        setFavoris(prev=>!prev)
+    }
+    
+  }
 
   return (
     <div
@@ -33,7 +47,16 @@ function Lien ({ href, description }) {
       <div
         className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
       >
-        <Icon type="fermer" title = 'supprimer' className="w-4 h-4" action = {(e) => {
+        <Icon 
+         type='star' 
+         title='favoris' 
+         className="w-3 h-3 mx-2" 
+         classNameFont={`${favorisStyle}`} 
+         action = {(e) => {
+          e.stopPropagation();
+          handleFav()
+        }}/>
+        <Icon type="fermer" title = 'supprimer' className="ml-1 w-2 h-2" action = {(e) => {
           e.stopPropagation();
           //Fonction de suppression de lien
         }} />

@@ -13,7 +13,7 @@ export default function Salle({name, number, lock, img, place, setRefresh, id, s
     }
     return <Reorder.Item 
             onClick={()=>lock&&onSalleClick()}
-            className={`w-11/12 md:w-3/4 lg:w-1/2 max-w-[500px] p-5 mb-5
+            className={`w-11/12 max-w-[500px] p-5 mb-5
                         flex justify-between items-center 
                         bg-white dark:bg-gray-800
                         ${active} 
