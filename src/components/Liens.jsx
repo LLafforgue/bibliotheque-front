@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Icon from "../kit/Icons";
 import fetchList from "../hooks/fetchList";
-
-function Lien ({ id, href, description, refresh, fav }) {
+import useMobile from "../hooks/UseMobile";
+function Lien ({ id, href, description, refresh, fav, video }) {
   const [favoris, setFavoris] = useState(fav)
   const favorisStyle = favoris? 'text-yellow-600 hover:text-gray-600' : 'text-gray-300 hover:text-yellow-400'
+  const isMobile = useMobile();
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -35,18 +36,20 @@ function Lien ({ id, href, description, refresh, fav }) {
           title = {`Aller vers ${description}`}
           showTitle = {true}
         />
-        <div>
-          {/* <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate max-w-xs">
-            {description}
-          </p> */}
-          <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
-            {new URL(href).hostname}
-          </p>
-        </div>
+        {isMobile&&<p className="ml-2 text-gray-700 dark:text-gray-200">{description}</p>}
+        <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
+        {new URL(href).hostname}
+        </p>
+        
       </div>
       <div
         className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
       >
+        {video&&<Icon
+         type='video'
+         title="Présence d'une vidéo"
+         className="w-2 h-2 mx-2" 
+         />}
         <Icon 
          type='star' 
          title='favoris' 
@@ -58,7 +61,7 @@ function Lien ({ id, href, description, refresh, fav }) {
         }}/>
         <Icon type="fermer" title = 'supprimer' className="ml-1 w-2 h-2" action = {(e) => {
           e.stopPropagation();
-          //Fonction de suppression de lien
+          //Fonction de suppression du lien de la salle ou de la DB
         }} />
       </div>
     </div>

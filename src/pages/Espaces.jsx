@@ -29,7 +29,7 @@ export default function Espaces() {
         console.log(liens);
 
         setVisibleLiens( liens.map((l)=>{
-            return <Lien key = {l._id} href= {l.href} description={l.description} id={l._id} fav={l.favoris} refresh={setRefresh}/>
+            return <Lien key = {l._id} href= {l.href} description={l.description} id={l._id} fav={l.favoris} refresh={setRefresh} video={l.video}/>
         }))
 
         };
@@ -202,7 +202,8 @@ export default function Espaces() {
                                         <NvxLiens 
                                             refresh={setRefresh} 
                                             salles={sallesUser}
-                                            setIsVisible={setLiensIsVisible} />
+                                            setIsVisible={setLiensIsVisible}
+                                            salleActive = {sallesUser.find(s=>s._id===salleActiveId).name} />
                                     </motion.div>}
                     </AnimatePresence>
                 </div>

@@ -9,7 +9,7 @@ import fetchList from '../../hooks/fetchList';
  * @param {} param0 
  * @returns 
  */
-export default function NvxLiens({ refresh, setIsVisible, salles }) {
+export default function NvxLiens({ refresh, setIsVisible, salles,salleActive }) {
     // État pour la liste des liens et leur visibilité
     const [liens, setLiens] = useState([
         {
@@ -17,7 +17,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles }) {
             href: '',
             description: '',
             motsClefs: [],
-            salles: [],
+            salles: [salleActive],
             isOpen: true,
             alert : false
         },
