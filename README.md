@@ -29,9 +29,19 @@ Ce projet permet aux utilisateurs connectés de :
   - Lexique interactif
 ---
 
-## 🛠 Technologies utilisées
-- **Frontend** : React (Create React App)
-- **Styling** : Tailwind CSS, Framer Motion
+## 📦 **Dépendances clés**
+
+
+| Catégorie       | Librairie                  |version    | Usage                            |
+|-----------------|----------------------------|-----------|----------------------------------|
+| **UI**          | `tailwindcss`              | ^3.4.17   | Styling utilitaire               |
+|                 | `framer-motion`            | ^12.23.12 | Animations                       |
+|                 | `@radix-ui/react-tooltip`  | ^1.2.8    | Info-bulles accessibles          |
+| **Icons**       | `fontAwesomeIcon`          | ^7.0.1    | Icones stylisées                 |
+| **Médias**      | `react-player`             | à venir   |Lecture de vidéos embarquées      |
+| **Utils**       | `date-fns`                 | à venir   | Manipulation des dates (alertes) |
+| **Routing**     | `react-router-dom`         | ^7.8.2    | Gestion des routes               |
+
 - **Gestion de projet** : Git, GitHub
 
 ---
@@ -75,8 +85,9 @@ bibliotheque-front/
 
 ## Fonctionnalités prévues
 - [x] Authentification utilisateur
-- [ ] Gestion des liens (ajout, suppression, organisation)
-- [ ] Identification automatique des vidéos
+- [x] Gestion des liens (ajout, suppression, organisation)
+- [x] Identification automatique des vidéos
+- [x] Gestion et affichage des favoris
 - [ ] Système de programmation des alertes
 - [ ] Lexique interactif
 
@@ -89,3 +100,5 @@ Ce projet est sous licence [MIT](LICENSE).
 
 ## Contact
 Pour toute question ou suggestion, n'hésitez pas à ouvrir une [issue](https://github.com/LLafforgue/bibliotheque-front/issues) ou à me contacter directement.
+
+

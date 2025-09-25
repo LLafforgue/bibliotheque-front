@@ -1,38 +1,35 @@
 import { motion } from "framer-motion";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { ClipLoader } from "react-spinners"; // ou PuffLoader, MoonLoader, etc.
 
-const Spinner = ({ size = 40, color = "#10b981", speed = 1.5 }) => {
+const Spinner = ({
+  size = 40,
+  color = "#10b981",
+  speed = 1.5,
+  loaderType = "ClipLoader", // Option pour changer le type de loader
+}) => {
+  // Mapping des loaders disponibles (étendable)
+  const LoaderComponent = {
+    ClipLoader: ClipLoader,
+   
+  }[loaderType];
+
   return (
     <div className="flex items-center justify-center">
       <motion.div
-        animate={{ 
-            rotate: 360,
-            opacity: [0.5, 1, 0.5], // Effet de fondu
+        animate={{
+          opacity: [0.5, 1, 0.5], // Effet de fondu via Framer Motion
         }}
         transition={{
-          duration: speed,
+          duration: speed * 0.6, // Synchronisé avec la vitesse de rotation
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        style={{
-          width: size,
-          height: size,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
       >
-        
-        <FontAwesomeIcon
-          icon={faSpinner}
-          spin
-          style={{
-            fontSize: size * 0.8, // Taille légèrement réduite pour un meilleur rendu
-            color: color,
-          }}
+        <LoaderComponent
+          color={color}
+          size={size}
+          speedMultiplier={speed / 1.5} // Ajuste la vitesse native du loader
         />
-        
       </motion.div>
     </div>
   );
