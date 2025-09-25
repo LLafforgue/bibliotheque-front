@@ -30,7 +30,7 @@ export default function Espaces() {
         console.log(liens);
 
         setVisibleLiens( liens.map((l)=>{
-            return <Lien key = {l._id} href= {l.href} description={l.description} id={l._id} fav={l.favoris} refresh={setRefresh} video={l.video}/>
+            return <Lien key = {l._id} href= {l.href} description={l.description} id={l._id} fav={l.favoris} favIcon={l?.favicon} refresh={setRefresh} video={l.video}/>
         }))
 
         };
@@ -204,7 +204,7 @@ export default function Espaces() {
                                             refresh={setRefresh} 
                                             salles={sallesUser}
                                             setIsVisible={setLiensIsVisible}
-                                            salleActive = {sallesUser.find(s=>s._id===salleActiveId).name} />
+                                            salleActive = {salleActiveId&&sallesUser.find(s=>s._id===salleActiveId).name} />
                                     </motion.div>}
                     </AnimatePresence>
                 </div>

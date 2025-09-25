@@ -17,7 +17,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles,salleActive }) 
             href: '',
             description: '',
             motsClefs: [],
-            salles: [salleActive],
+            salles: salleActive&&[salleActive]||[],
             isOpen: true,
             alert : false
         },
@@ -343,7 +343,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles,salleActive }) 
 
                                             />
                                             {selectedSalle.length>1&&
-                                            (<motion.button
+                                            (<motion.div
                                                 onClick = {()=>{handleChange(lien.id, 'salles', selectedSalle)}}
                                                 whileTap = {{sclale:0.95}}
                                                 animate = {{scale:[1,1.1,1]}}
@@ -370,7 +370,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles,salleActive }) 
                                                 classNameFont="w-3 h-3"
                                                 tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
                                                 />
-                                            </motion.button>)}
+                                            </motion.div>)}
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {lien.salles?.map((salle, i) => (
@@ -455,7 +455,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles,salleActive }) 
                                                 alerteMessage={lien.alert?"caractère invalide":"Veuillez entrer au moins un mot-clé."}
                                             />
                                             {motClef.length>1&&
-                                            <motion.button
+                                            <motion.div
                                                 onClick = {() =>{
                                                     setMotClef('');
                                                     handleChange(lien.id, 'motsClefs', motClef);
@@ -485,7 +485,7 @@ export default function NvxLiens({ refresh, setIsVisible, salles,salleActive }) 
                                                 classNameFont="w-3 h-3"
                                                 tooltipClassName='backdrop-blur-sm text-gray-800 dark:text-gray-50'
                                             />
-                                            </motion.button>}
+                                            </motion.div>}
                                         </div>
                                         <div className="flex flex-wrap gap-2">
                                             {lien.motsClefs?.map((mot, i) => (
