@@ -34,7 +34,7 @@ export default async function fetchList(endpoint, method = 'GET', body = null) {
   };
 
   try {
-    const response = await fetch(`http://localhost:3001/${endpoint}`, config);
+    const response = await fetch(`https://bibliotheque-backend.vercel.app/${endpoint}`, config);
     const data = await response.json()
 
     if (!data.result) {
