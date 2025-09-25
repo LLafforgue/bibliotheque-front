@@ -5,14 +5,14 @@ import NvllSalle from "../components/modales/NvllSalle";
 import NvxLiens from "../components/modales/NvxLiens";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
+import Input from "../kit/Input";
 import useMobile from "../hooks/UseMobile";
 import Lien from "../components/Liens";
 import Spinner from "../kit/Spinner";
-// Ajoutez ce composant Lien en haut de votre fichier (ou dans un fichier séparé)
 
 
 export default function Espaces() {
-    //a changer pour un refresh quand il y aura des datas.
+
     const [refresh, setRefresh] = useState(false);
     const [sallesUser, setSallesUser] = useState([]);
     const [loader, setLoader] = useState(false);
@@ -21,13 +21,15 @@ export default function Espaces() {
     const [liensIsVisible, setLiensIsVisible] = useState(false);
     const [visibleLiens, setVisibleLiens] = useState([]);
     const [salleActiveId, setSalleActiveId] = useState(null);
+    const [salleInput, setSalleInput] = useState('');
+    const [search, setSearch] = useState('')
+
     //Détecteur de réduction de taille de fenètre
     const isMobile = useMobile();
 
     const loadLiens = (id)=>{
         const liens = sallesUser.filter(s=>s._id===id)[0].liens
         setSalleActiveId(id)
-        console.log(liens);
 
         setVisibleLiens( liens.map((l)=>{
             return <Lien key = {l._id} href= {l.href} description={l.description} id={l._id} fav={l.favoris} favIcon={l?.favicon} refresh={setRefresh} video={l.video}/>
@@ -49,6 +51,10 @@ export default function Espaces() {
     }, [refresh]);
 
     const salles = sallesUser?.map((s) => {
+        const patern = new RegExp(salleInput, "i")
+                        if(search==='noms'&&!patern.test(s.name)){
+                            return
+                        }
                         return( 
                                 <Salle 
                                     onSalleClick={()=>loadLiens(s._id)}
@@ -84,6 +90,139 @@ export default function Espaces() {
                         transition-colors duration-500">
                             
             <h2 className="my-1 text-3xl font-bold text-gray-800 dark:text-gray-200">Bienvenue dans vos salles</h2>
+            <div className="w-full max-w-md mx-auto mb-6">
+                {/* Conteneur principal avec bordure et fond */}
+                <div className="
+                    flex items-center gap-0
+                    p-2 pl-3
+                    bg-white dark:bg-gray-800
+                    border border-gray-300 dark:border-gray-600
+                    rounded-lg shadow-sm
+                    focus-within:ring-2 focus-within:ring-emerald-500 dark:focus-within:ring-violet-500
+                    transition-all
+                    ">
+                    {/* Icône de recherche */}
+                    <Icon
+                    type="search"
+                    title="Faire une recherche de salle par :"
+                    showTitle={true}
+                    className="text-gray-500 dark:text-gray-400"
+                    classNameFont="w-5 h-5"
+                    />
+
+                    {/* Séparateur visuel */}
+                    <span className="mx-2 text-gray-400 dark:text-gray-500">|</span>
+
+                    {/* Options de recherche (noms/mots-clés) */}
+                    <div className="flex">
+                    <button
+                        onClick={() => setSearch('noms')}
+                        className={`
+                        px-3 py-1 rounded-md text-sm font-medium transition-colors
+                        ${search === 'noms'
+                            ? 'text-emerald-600 dark:text-violet-400 bg-emerald-50 dark:bg-gray-700'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'}
+                        `}
+                        >
+                        Noms
+                    </button>
+                    <span className="mx-2 text-gray-400 dark:text-gray-500">|</span>
+                    <button
+                        onClick={() => setSearch('motClefs')}
+                        className={`
+                        px-3 py-1 rounded-md text-sm font-medium transition-colors
+                        ${search === 'motClefs'
+                            ? 'text-emerald-600 dark:text-violet-400 bg-emerald-50 dark:bg-gray-700'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'}
+                        `}
+                        >
+                        Mots-clés
+                    </button>
+                    </div>
+                </div>
+
+                {/* Zone de recherche conditionnelle */}
+                <div className="mt-2 relative">
+                    {search === 'noms' && (
+                    <Input
+                        type="text"
+                        title="Rechercher une salle"
+                        placeholder="Ex: Salle de réunion, Projet Alpha..."
+                        value={salleInput}
+                        change={(e) => setSalleInput(e.target.value)}
+                        autocomplete={true}
+                        dataliste={sallesUser.map(s => s.name)}
+                        onAutoClick={setSalleInput}
+                        className="w-full"
+                        inputClassName="
+                        pl-10 pr-4 py-2
+                        border border-gray-300 dark:border-gray-600
+                        rounded-lg shadow-sm
+                        focus:ring-2 focus:ring-emerald-500 dark:focus:ring-violet-500
+                        dark:bg-gray-800 dark:text-gray-200
+                        "
+                        autoBoxClassName="
+                        max-h-60 w-full
+                        bg-white dark:bg-gray-800
+                        border border-gray-200 dark:border-gray-700
+                        rounded-md shadow-lg
+                        overflow-y-auto
+                        mt-1
+                        "
+                    />
+                    )}
+
+                    {search === 'motClefs' && (
+                    <Input
+                        type="text"
+                        title="Rechercher par mots-clés"
+                        placeholder="Ex: marketing, design, urgent..."
+                        value={salleInput}
+                        change={(e) => setSalleInput(e.target.value)}
+                        autocomplete={true}
+                        dataliste={sallesUser.flatMap(s => s.liens.flatMap(l => l.motsClefs)).filter((v, i, a) => a.indexOf(v) === i)} // Supprime les doublons
+                        onAutoClick={setSalleInput}
+                        className="w-full"
+                        inputClassName="
+                        pl-10 pr-4 py-2
+                        border border-gray-300 dark:border-gray-600
+                        rounded-lg shadow-sm
+                        focus:ring-2 focus:ring-emerald-500 dark:focus:ring-violet-500
+                        dark:bg-gray-800 dark:text-gray-200
+                        "
+                        autoBoxClassName="
+                        max-h-60 w-full
+                        bg-white dark:bg-gray-800
+                        border border-gray-200 dark:border-gray-700
+                        rounded-md shadow-lg
+                        overflow-y-auto
+                        mt-1
+                        "
+                    />
+                    )}
+                    {search&&<Icon
+                    type="fermer"
+                    title="Annuler la recherche"
+                    action={()=>setSearch('')}
+                    className={`
+                        absolute right-2 top-1
+                        
+                        text-gray-500 dark:text-gray-400
+                        hover:text-gray-800 dark:hover:text-gray-200
+                        transition-all duration-200
+                        ${search ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}  {/* Animation */}
+                        z-10
+                        `}
+                    tooltipClassName="
+                        bg-white dark:bg-gray-800
+                        text-gray-800 dark:text-gray-200
+                        text-sm
+                        border border-gray-200 dark:border-gray-700
+                        "
+                    />}
+                </div>
+                </div>
+
             <div className="w-full p-5 flex gap-2 justify-center items-center">
                 <Icon
                 type={isVisible&&'salleouverte'||'sallefermee'}

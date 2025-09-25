@@ -2,15 +2,20 @@ import {useState} from "react";
 import { Reorder } from "framer-motion";
 import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
-// mettre aussi les liens en props (à populate) + mettre un is visible pour afficher la liste de liens
+
 export default function Salle({name, number, lock, img, place, setRefresh, id, salle, onSalleClick , isActive}) {
+
     const [modifOn, setModifOn] = useState(false);
     const [newName, setNewName] = useState('');
+
     const active = isActive? 'border-2 border-emerald-800 dark:border-violet-800' : ''
+
     const changeName = async () => {
         setRefresh(true);
         await fetchList(`rubriques/newname/${id}`,'PUT',{name:newName})
     }
+
+
     return <Reorder.Item 
             onClick={()=>lock&&onSalleClick()}
             className={`w-11/12 max-w-[500px] p-5 mb-5
@@ -23,8 +28,7 @@ export default function Salle({name, number, lock, img, place, setRefresh, id, s
             >
         {/*image container*/}
         <div  className="w-16 h-16 bg-emerald-300 dark:bg-violet-500 rounded-full flex items-center justify-center">
-            {/* <img src={``} alt={name} className="w-12 h-12 rounded-full"/> */}
-            image
+            <img src={`./logo512.png`} alt={name} className="w-12 h-12 rounded-full"/>
         </div>
         {/*info container*/}
         <div className="px-5 w-3/4 flex gap-1 flex-col justify-center items-start ">
