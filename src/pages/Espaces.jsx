@@ -347,6 +347,12 @@ export default function Espaces() {
                                     </motion.div>}
                     </AnimatePresence>
                 </div>
+                {loader && <Spinner/>}
+                    {!loader && sallesUser.length === 0 && (
+                        <p className="text-gray-600 dark:text-gray-400">
+                            Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.
+                        </p>
+                    )}
             </div>
                 {/*Affichage des salle + liens*/}
                 <div className={`w-full max-h-5/6 flex  justify-center items-start ${isMobile ? "flex-col" : "flex-row"}`}>
@@ -359,12 +365,7 @@ export default function Espaces() {
                         {salles}
                     </Reorder.Group>
 
-                    {loader && <Spinner/>}
-                    {!loader && sallesUser.length === 0 && (
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.
-                        </p>
-                    )}
+                    
                 {/* Affichage des liens */}
                 {visibleLiens?.length > 0 && (
                     <motion.div
