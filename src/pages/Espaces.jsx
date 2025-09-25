@@ -7,6 +7,7 @@ import fetchList from "../hooks/fetchList";
 import Icon from "../kit/Icons";
 import useMobile from "../hooks/UseMobile";
 import Lien from "../components/Liens";
+import Spinner from "../kit/Spinner";
 // Ajoutez ce composant Lien en haut de votre fichier (ou dans un fichier séparé)
 
 
@@ -219,7 +220,7 @@ export default function Espaces() {
                         {salles}
                     </Reorder.Group>
 
-                    {loader && <span className="text-gray-600 dark:text-gray-400">Chargement des données</span>}
+                    {loader && <Spinner/>}
                     {!loader && sallesUser.length === 0 && (
                         <p className="text-gray-600 dark:text-gray-400">
                             Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.
