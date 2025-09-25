@@ -1,6 +1,8 @@
 /**
  * Effectue une requête HTTP vers l'API.
- *
+ * vers le serveur déployé : https://bibliotheque-backend.vercel.app
+ * vers le serveur local :http://localhost:3001
+ * 
  * @param {string} endpoint - L'endpoint de l'API (ex: "auth/users/register").
  * @param {string} [method="GET"] - La méthode HTTP utilisée ("GET", "POST", "PUT", "DELETE"...).
  * @param {Object|null} [body=null] - Les données à envoyer dans la requête (seront converties en JSON).

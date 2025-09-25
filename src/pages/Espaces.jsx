@@ -22,7 +22,11 @@ export default function Espaces() {
     const [visibleLiens, setVisibleLiens] = useState([]);
     const [salleActiveId, setSalleActiveId] = useState(null);
     const [salleInput, setSalleInput] = useState('');
-    const [search, setSearch] = useState('')
+    const patern = new RegExp(salleInput, "i");
+    const [search, setSearch] = useState('');
+    const [divisions, setDivision] = useState([]);
+    
+
 
     //Détecteur de réduction de taille de fenètre
     const isMobile = useMobile();
@@ -45,30 +49,40 @@ export default function Espaces() {
         setSallesUser([])
         :
         setSallesUser(response.data);
+        const divisionNumber = Math.ceil(response?.data?.length/4) //test divisions
+        setDivision(Array.from({ length: divisionNumber }, (_, i) => i)) //test divisions
+        console.log(response.data)
         setLoader(false)
        };
        dataFetch();
-    }, [refresh]);
+    }, [refresh,lock]);
 
-    const salles = sallesUser?.map((s) => {
-        const patern = new RegExp(salleInput, "i")
-                        if(search==='noms'&&!patern.test(s.name)){
-                            return
+    const salles = divisions.map((div,i)=>{
+        return <div key={i} className="flex">
+
+                {sallesUser.map((s,j)=>{
+                        if( j>=(i)*4 && j<(i+1)*4){
+
+                            if(search==='noms' && !patern.test(s.name)) return
+
+                            return(
+                            <Salle 
+                                onSalleClick={()=>loadLiens(s._id)}
+                                key={s._id}
+                                salle={s} 
+                                name={s.name} 
+                                setRefresh={setRefresh} 
+                                number={s.number} 
+                                id={s._id}
+                                lock={lock}
+                                isActive={salleActiveId === s._id}/>)
                         }
-                        return( 
-                                <Salle 
-                                    onSalleClick={()=>loadLiens(s._id)}
-                                    key={s._id}
-                                    salle={s} 
-                                    name={s.name} 
-                                    setRefresh={setRefresh} 
-                                    number={s.number} 
-                                    id={s._id}
-                                    lock={lock}
-                                    isActive={salleActiveId === s._id}/>
-                                        
-                             )}
-                );
+                        }
+                    )}
+
+             </div>
+    })
+
 
     const handlePosition = async () => {
         const newPositions = sallesUser.reduce(
@@ -88,7 +102,8 @@ export default function Espaces() {
                         flex flex-col items-center 
                         bg-gradient-to-b from-blue-50 dark:from-gray-700 to-blue-400 dark:to-gray-900 
                         transition-colors duration-500">
-                            
+            
+            {/* Header de recherche*/}
             <h2 className="my-1 text-3xl font-bold text-gray-800 dark:text-gray-200">Bienvenue dans vos salles</h2>
             <div className="w-full max-w-md mx-auto mb-6">
                 {/* Conteneur principal avec bordure et fond */}
@@ -221,8 +236,9 @@ export default function Espaces() {
                         "
                     />}
                 </div>
-                </div>
+            </div>
 
+            {/* Gestion des salles */}
             <div className="w-full p-5 flex gap-2 justify-center items-center">
                 <Icon
                 type={isVisible&&'salleouverte'||'sallefermee'}
@@ -274,7 +290,7 @@ export default function Espaces() {
                 <Icon
                 type='lock'
                 title='Selectionner pour gérer votre arangement'
-                action={()=>setLock(false)}
+                action={()=>{setLock(false); setSalleInput('')}}
                 tooltipClassName="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm"
                 classNameFont="mx-2 w-6 h-6 cursor-pointer font-bold"
                 className="
@@ -347,71 +363,74 @@ export default function Espaces() {
                                     </motion.div>}
                     </AnimatePresence>
                 </div>
-                {loader && <Spinner/>}
+                
+            </div>
+            
+            {/*Affichage des salle + liens*/}
+            <div className={`w-full max-h-5/6 flex  justify-center items-start ${isMobile ? "flex-col" : "flex-row"}`}>
+                {/* Liste des salles */}
+                <Reorder.Group
+                    className="flex  flex-col justify-center items-center flex-1"
+                    values={sallesUser}
+                    onReorder={setSallesUser}
+                >
+                    {salles}
+                </Reorder.Group>
+
+                
+            {/* Affichage des liens */}
+            {visibleLiens?.length > 0 && (
+                <motion.div
+                    initial={{
+                        opacity: 0,
+                        x: isMobile ? "100%" : 20, // mobile = glisse de droite
+                        y: 0
+                    }}
+                    animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: 0
+                    }}
+                    exit={{
+                        opacity: 0,
+                        x: isMobile ? "100%" : 20, // repart sur la droite
+                        y: 0
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className={`
+                        ${isMobile 
+                            ? "fixed inset-0 w-full h-full z-50 p-4 flex flex-col items-center bg-white dark:bg-gray-900" 
+                            : "ml-4 w-1/2 relative"
+                        }
+                    `}
+                >
+                    <div className={` rounded-lg shadow-xl overflow-y-auto p-3 border border-gray-200 dark:border-gray-700 
+                                    ${isMobile ? "flex-1 w-4/5" : "fixed bg-white dark:bg-gray-800"}`}>
+                        
+                        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex justify-between mb-2">
+                            Liens associés à {sallesUser.find((e)=>e._id===salleActiveId).name}
+                            <Icon type="fermer" title="Fermer" action={() => setVisibleLiens([])} />
+                        </h3>
+
+                        {visibleLiens.length > 0 ? (
+                            visibleLiens
+                        ) : (
+                            <p className="text-sm text-gray-500 dark:text-gray-400 p-2">
+                                Aucun lien pour cette salle
+                            </p>
+                        )}
+                    </div>
+                </motion.div>
+            )}
+
+            </div>
+
+            {loader && <Spinner/>}
                     {!loader && sallesUser.length === 0 && (
                         <p className="text-gray-600 dark:text-gray-400">
                             Vous n'avez pas encore de salles. Cliquez sur le + pour en ajouter une.
                         </p>
                     )}
-            </div>
-                {/*Affichage des salle + liens*/}
-                <div className={`w-full max-h-5/6 flex  justify-center items-start ${isMobile ? "flex-col" : "flex-row"}`}>
-                    {/* Liste des salles */}
-                    <Reorder.Group
-                        className="flex  flex-col justify-center items-center flex-1"
-                        values={sallesUser}
-                        onReorder={setSallesUser}
-                    >
-                        {salles}
-                    </Reorder.Group>
-
-                    
-                {/* Affichage des liens */}
-                {visibleLiens?.length > 0 && (
-                    <motion.div
-                        initial={{
-                            opacity: 0,
-                            x: isMobile ? "100%" : 20, // mobile = glisse de droite
-                            y: 0
-                        }}
-                        animate={{
-                            opacity: 1,
-                            x: 0,
-                            y: 0
-                        }}
-                        exit={{
-                            opacity: 0,
-                            x: isMobile ? "100%" : 20, // repart sur la droite
-                            y: 0
-                        }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`
-                            ${isMobile 
-                                ? "fixed inset-0 w-full h-full z-50 p-4 flex flex-col items-center bg-white dark:bg-gray-900" 
-                                : "ml-4 w-1/2 relative"
-                            }
-                        `}
-                    >
-                        <div className={` rounded-lg shadow-xl overflow-y-auto p-3 border border-gray-200 dark:border-gray-700 
-                                        ${isMobile ? "flex-1 w-4/5" : "fixed bg-white dark:bg-gray-800"}`}>
-                            
-                            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex justify-between mb-2">
-                                Liens associés à {sallesUser.find((e)=>e._id===salleActiveId).name}
-                                <Icon type="fermer" title="Fermer" action={() => setVisibleLiens([])} />
-                            </h3>
-
-                            {visibleLiens.length > 0 ? (
-                                visibleLiens
-                            ) : (
-                                <p className="text-sm text-gray-500 dark:text-gray-400 p-2">
-                                    Aucun lien pour cette salle
-                                </p>
-                            )}
-                        </div>
-                    </motion.div>
-                )}
-
-            </div>
             
             
         </div>
